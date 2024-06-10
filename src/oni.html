@@ -64,6 +64,13 @@
         .chat-input button[type="submit"]:hover {
             background-color: #3e8e41;
         }
+        .message-history {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+        .message-history li {
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -95,6 +102,9 @@
         </div>
         <div class="chat-input">
             <h3>Chat with Oni</h3>
+            <ul class="message-history" id="message-history">
+                <!-- Message history will be displayed here -->
+            </ul>
             <input type="text" id="chat-input" placeholder="Type a message...">
             <button type="submit" id="send-button">Send</button>
             <iframe
@@ -114,17 +124,16 @@
         // Add event listener to send button
         document.getElementById("send-button").addEventListener("click", function() {
             const chatInput = document.getElementById("chat-input");
+            const messageHistory = document.getElementById("message-history");
             const conversationHistory = document.getElementById("conversation-history");
             const message = chatInput.value;
             chatInput.value = "";
 
-            // Add message to conversation history
+            // Add message to message history
             const messageHTML = `<li>${message}</li>`;
-            conversationHistory.innerHTML += messageHTML;
+            messageHistory.innerHTML += messageHTML;
 
-            // Send message to chatbot API
-            // TO DO: implement API call to send message to chatbot
-        });
-    </script>
-</body>
-</html>
+            // Add conversation to conversation history
+            const conversationLabel = message.substring(0, 20);
+            const conversationHTML = `<li><a href="#">${conversationLabel}</a></li>`;
+            conversationHistory.innerHTML += conversationHTML;
