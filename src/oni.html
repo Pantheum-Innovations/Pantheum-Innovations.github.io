@@ -19,11 +19,6 @@
             height: 100vh;
             padding: 20px;
         }
-        .chatbot-header {
-            background-color: #333;
-            padding: 10px;
-            border-bottom: 1px solid #444;
-        }
         .conversation-history {
             width: 30%;
             background-color: #333;
@@ -45,6 +40,9 @@
         .chat-input {
             width: 70%;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         .chat-input input[type="text"] {
             width: 100%;
@@ -68,9 +66,18 @@
         .chat-input button[type="submit"]:hover {
             background-color: #3e8e41;
         }
+        .chat-input select, .chat-input label {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+        }
         .message-history {
             padding: 10px;
             border-bottom: 1px solid #444;
+            overflow-y: auto;
+            height: 60vh;
         }
         .message-history li {
             padding: 10px;
@@ -113,6 +120,16 @@
             <ul class="message-history" id="message-history">
                 <!-- Message history will be displayed here -->
             </ul>
+            <label for="agent-select">Choose Agent:</label>
+            <select id="agent-select">
+                <option value="agent1">Agent 1</option>
+                <option value="agent2">Agent 2</option>
+            </select>
+            <label for="memory-switch">Memory:</label>
+            <select id="memory-switch">
+                <option value="on">On</option>
+                <option value="off">Off</option>
+            </select>
             <input type="text" id="chat-input" placeholder="Type a message...">
             <button type="submit" id="send-button">Send</button>
         </div>
@@ -145,3 +162,4 @@
     </script>
 </body>
 </html>
+
