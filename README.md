@@ -1,9 +1,9 @@
 # pantheum-innovations.github.io
 our website hosted on git
-https://pantheum-innovations.github.io
+[https://patheum.git](https://pantheum-innovations.github.io)
 other websites:
-https://pantheuminno.weebly.com
-[https://patheum.com](https://pantheum.pyxl.ai/)
+[https://patheum.com](https://pantheuminno.weebly.com)
+[https://patheum.ai](https://pantheum.pyxl.ai/)
 
 We are an AI development and Crypto Mining multisector company with a group of experienced volunteer developers, looking to find our place in the AI and Crypto revolutions. 
 
