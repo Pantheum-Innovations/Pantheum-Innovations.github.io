@@ -141,12 +141,14 @@
         <p>&copy; 2024 Pantheum Innovations. All rights reserved.</p>
     </footer>
 
-    <script>
-        // Add event listener to send button
+      <script>
+        let firstMessage = true;
+
         document.getElementById("send-button").addEventListener("click", function() {
             const chatInput = document.getElementById("chat-input");
             const messageHistory = document.getElementById("message-history");
             const conversationHistory = document.getElementById("conversation-history");
+            const memorySwitch = document.getElementById("memory-switch");
             const message = chatInput.value;
             chatInput.value = "";
 
@@ -154,12 +156,26 @@
             const messageHTML = `<li>${message}</li>`;
             messageHistory.innerHTML += messageHTML;
 
-            // Add conversation to conversation history
-            const conversationLabel = message.substring(0, 20);
-            const conversationHTML = `<li><a href="#">${conversationLabel}</a></li>`;
-            conversationHistory.innerHTML += conversationHTML;
+            if (memorySwitch.value === "on") {
+                // Add conversation to conversation history if this is the first message
+                if (firstMessage) {
+                    const conversationLabel = message.substring(0, 20);
+                    const conversationHTML = `<li><a href="#">${conversationLabel}</a></li>`;
+                    conversationHistory.innerHTML += conversationHTML;
+                    firstMessage = false;
+                }
+            }
+        });
+
+        // Reset firstMessage flag when agent is changed
+        document.getElementById("agent-select").addEventListener("change", function() {
+            firstMessage = true;
+        });
+
+        // Reset firstMessage flag when memory switch is changed
+        document.getElementById("memory-switch").addEventListener("change", function() {
+            firstMessage = true;
         });
     </script>
 </body>
 </html>
-
