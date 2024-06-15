@@ -3,7 +3,7 @@ our website hosted on git
 https://pantheum-innovations.github.io
 other websites:
 https://pantheuminno.weebly.com
-https://patheum.catchy.page
+[https://patheum.catchy.page](https://pantheum.pyxl.ai/)
 
 We are an AI development and Crypto Mining multisector company with a group of experienced volunteer developers, looking to find our place in the AI and Crypto revolutions. 
 
