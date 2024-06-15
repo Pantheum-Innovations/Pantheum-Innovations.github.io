@@ -18,10 +18,10 @@ header, footer {
 
 nav {
     display: flex;
-    justify-content: center;
+    justify-content: right;
     background-color: #111111;
     padding: 10px;
-    border-radius: 10px;
+    border-bottom: 1px solid #333;
     box-shadow: 0 0 10px #24d15e;
 }
 
@@ -36,6 +36,15 @@ nav a:hover {
     background-color: #24d15e;
     color: #000000;
     border-radius: 5px;
+}
+
+.nav-bar {
+    background-color: #111111;
+    padding: 1em;
+    display: flex;
+    justify-content: space-between, right;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 0 10px #24d15e;
 }
 
 .hero {
