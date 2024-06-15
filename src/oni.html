@@ -52,6 +52,8 @@
             border: none;
             border-radius: 10px;
             font-size: 16px;
+            background-color: #333;
+            color: #fff;
         }
         .chat-input button[type="submit"] {
             background-color: #4CAF50;
@@ -60,6 +62,8 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
         .chat-input button[type="submit"]:hover {
             background-color: #3e8e41;
@@ -70,6 +74,9 @@
         }
         .message-history li {
             padding: 10px;
+            background-color: #444;
+            border-radius: 5px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -91,7 +98,7 @@
             <h2>Oni - Your Intelligent Assistant</h2>
             <p>Oni is a fully modular AGI system capable of performing a wide range of tasks. From data analysis to interactive dialogue, Oni is here to help.</p>
         </div>
-        <img src=".../bot.jpg" alt="src/images/bot.jpg" width="100%" height="300px">
+        <img src="src/images/bot.jpg" alt="Bot Image" width="100%" height="300px">
     </section>
 
     <div class="chatbot">
@@ -109,17 +116,10 @@
             <input type="text" id="chat-input" placeholder="Type a message...">
             <button type="submit" id="send-button">Send</button>
         </div>
-     </div>
     </div>
-   
-        <iframe
-        src="https://ahricat-google-gemma-7b.hf.space"
-        frameborder="0"
-        width= auto
-        height="480"
-        ></iframe>
-    
-    </div>
+
+    <iframe src="https://ahricat-google-gemma-7b.hf.space" frameborder="0" width="100%" height="480"></iframe>
+
     <footer>
         <p>&copy; 2024 Pantheum Innovations. All rights reserved.</p>
     </footer>
@@ -140,6 +140,8 @@
             // Add conversation to conversation history
             const conversationLabel = message.substring(0, 20);
             const conversationHTML = `<li><a href="#">${conversationLabel}</a></li>`;
-            conversationHistory.innerHTML += conversationHTML;})</script>
-            </body>
+            conversationHistory.innerHTML += conversationHTML;
+        });
+    </script>
+</body>
 </html>
