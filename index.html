@@ -3,34 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pantheum Innovations</title>
-    <link rel="stylesheet" type="text/css" href="./styles.css">
-
+    <title>Pantheum Innovations</title><image href="src/images/logo.png"></image>
+    <link rel="stylesheet" type="text/css" href="src/styles.css">
 </head>
 <body>
-
-    <header>
-        <h1>Pantheum Innovations</h1>
-        <p>This is our Github website, Check out the pages!</p>
-    </header>
-
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="/src/deschool.html">DeSchool</a>
-        <a href="/src/uploads.html">Uploads Project</a>
-        <a href="/src/oni.html">Oni</a>
+    <header class="header">
+        <div class="header-content">
+          <h1>Pantheum Innovations</h1>
+          <p>Innovating for the Future, ahead of time.</p>
+        </div>
+      </header>
+      <nav class="nav-bar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="deschool.html">DeSchool</a></li>
+            <li><a href="uploads.html">Uploads Project</a></li>
+            <li class="dropdown">
+                <a href="oni.html" class="dropbtn">Oni</a>
+                <div class="dropdown-content">
+                    <a href="oni.html">Hyper Chat</a>
+                    <a href="#">Use Oni in your business</a>
+                    <a href="#">ONI Support</a>
+                </div>
+            </li>
+        </ul>
     </nav>
+
 
     <section>
         <div class="hero">
             <h2>Welcome to Pantheum Innovations</h2>
             <p>We are dedicated to advancing technology and education through innovative projects.</p>
         </div>
+
+        <div class="hero" style="margin-top: 20px;">
+            <h2>Oni - Your Intelligent Assistant</h2>
+            <p>Oni is a fully modular AGI system capable of performing a wide range of tasks. From data analysis to interactive dialogue, Oni is here to help. Oni is designed to be highly adaptable, allowing it to handle everything from casual conversations to complex problem-solving. Explore how Oni can assist you with its advanced capabilities.</p>
+        </div>
     </section>
 
     <footer>
         <p>&copy; 2024 Pantheum Innovations. All rights reserved.</p>
     </footer>
-
 </body>
 </html>
