@@ -23,7 +23,8 @@
             width: 30%;
             background-color: #111111;
             padding: 20px;
-            border-right: 1px solid #444;
+            border-right: 1px solid #222222;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
         .conversation-history ul {
             list-style: none;
@@ -32,7 +33,9 @@
         }
         .conversation-history li {
             padding: 10px;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #222222;
+            background-color: #111111;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
         .conversation-history li:last-child {
             border-bottom: none;
@@ -45,15 +48,16 @@
             gap: 10px;
         }
         .chat-input input[type="text"] {
-            width: 70%;
+            width: 100%;
             padding: 10px;
             border: none;
             border-radius: 10px;
             font-size: 16px;
             background-color: #111111;
             color: #fff;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
-        .chat-input button[type="submit"] {
+        .chat-input button {
             background-color: #4CAF50;
             color: #fff;
             padding: 10px 20px;
@@ -63,7 +67,7 @@
             margin-top: 10px;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
-        .chat-input button[type="submit"]:hover {
+        .chat-input button:hover {
             background-color: #3e8e41;
         }
         .chat-input select, .chat-input label {
@@ -72,18 +76,22 @@
             padding: 10px;
             border: none;
             border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
         .message-history {
             padding: 10px;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #222222;
             overflow-y: auto;
             height: 60vh;
+            background-color: #111111;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
         .message-history li {
             padding: 10px;
-            background-color: #444;
-            border-radius: 10px;
+            background-color: #222222;
+            border-radius: 5px;
             margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
     </style>
 </head>
@@ -114,24 +122,37 @@
             <ul id="conversation-history">
                 <!-- Conversation history will be displayed here -->
             </ul>
+            <button type="button" id="clear-history-button">Clear Conversation History</button>
         </div>
         <div class="chat-input">
             <h3>Chat with Oni</h3>
             <ul class="message-history" id="message-history">
                 <!-- Message history will be displayed here -->
             </ul>
-            <label for="agent-select">Agent Select</label>
+            <label for="agent-select">Choose Agent:</label>
             <select id="agent-select">
-                <option value="agent1">Oni Hive</option>
-                <option value="agent2">Oni Hyper</option>
+                <option value="agent1">Web Crawler</option>
+                <option value="agent2">Coder</option>
+                <option value="agent3">Translator</option>
+                <option value="agent4">Councelor</option>
+                <option value="agent5">Advisor</option>
             </select>
             <label for="memory-switch">Memory:</label>
             <select id="memory-switch">
                 <option value="on">On</option>
                 <option value="off">Off</option>
             </select>
-            <input type="text" id="chat-input" placeholder="say something. . .">
+            <label for="model-select">Choose Model:</label>
+            <select id="model-select">
+                <option value="model1">Hive</option>
+                <option value="model2">Hyper</option>
+            </select>
+            <input type="text" id="chat-input" placeholder="Say something...">
             <button type="submit" id="send-button">Send</button>
+            <button type="button" id="clear-button">Clear Conversation</button>
+            <button type="button" id="file-button">Upload File</button>
+            <button type="button" id="mic-button">Microphone</button>
+            <button type="button" id="video-button">OniCam Chat</button>
         </div>
     </div>
 
@@ -141,7 +162,7 @@
         <p>&copy; 2024 Pantheum Innovations. All rights reserved.</p>
     </footer>
 
-      <script>
+    <script>
         let firstMessage = true;
 
         document.getElementById("send-button").addEventListener("click", function() {
@@ -175,6 +196,31 @@
         // Reset firstMessage flag when memory switch is changed
         document.getElementById("memory-switch").addEventListener("change", function() {
             firstMessage = true;
+        });
+
+        // Clear conversation history
+        document.getElementById("clear-history-button").addEventListener("click", function() {
+            document.getElementById("conversation-history").innerHTML = "";
+        });
+
+        // Clear message history
+        document.getElementById("clear-button").addEventListener("click", function() {
+            document.getElementById("message-history").innerHTML = "";
+        });
+
+        // Upload file functionality (stub)
+        document.getElementById("file-button").addEventListener("click", function() {
+            alert("File upload feature coming soon!");
+        });
+
+        // Microphone functionality (stub)
+        document.getElementById("mic-button").addEventListener("click", function() {
+            alert("Microphone feature coming soon!");
+        });
+
+        // OniCam Chat functionality (stub)
+        document.getElementById("video-button").addEventListener("click", function() {
+            alert("OniCam Chat feature coming soon!");
         });
     </script>
 </body>
