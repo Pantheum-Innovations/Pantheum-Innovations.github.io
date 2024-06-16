@@ -4,10 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pantheum Innovations - DeSchool</title>
-  <link rel="stylesheet" type="text/css" href="./deschool.css">
   <link rel="stylesheet" type="text/css" href="./styles.css">
+  <link rel="stylesheet" type="text/css" href="./deschool.css">
 </head>
 <body>
+
+  <nav class="nav-bar">
+    <img class="nav-logo" src="./images/logo.png"></img>
+    <ul>
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./deschool.html">DeSchool</a></li>
+      <li><a href="./uploads.html">Uploads Project</a></li>
+      <li class="dropdown">
+        <a href="./oni.html" class="dropbtn">Oni</a>
+        <div class="dropdown-content">
+          <a href="./oni.html">Hyper Chat</a>
+          <a href="#">Use Oni in your business</a>
+          <a href="#">ONI Support</a>
+        </div>
+      </li>
+    </ul>
+  </nav>
 
   <header class="header">
     <div class="header-content">
@@ -16,32 +33,16 @@
     </div>
   </header>
 
-  <nav class="nav-bar">
-    <ul>
-      <li><a href="src/index.html">Home</a></li>
-      <li><a href="src/deschool.html">DeSchool</a></li>
-      <li><a href="src/uploads.html">Uploads Project</a></li>
-      <li class="dropdown">
-        <a href="src/oni.html" class="dropbtn">Oni</a>
-        <div class="dropdown-content">
-          <a href="src/oni.html">Hyper Chat</a>
-          <a href="#">Use Oni in your business</a>
-          <a href="#">ONI Support</a>
-        </div>
-      </li>
-    </ul>
-  </nav>
-
   <main class="main-content">
-    <section class="hero-section">
+    <section class="hero-section half">
       <center><h2>DeSchool</h2></center>
     </section>
 
-    <section>
+    <section class="half">
       <p>DeSchool is our revolutionary platform designed to decentralize education, providing access to high-quality learning resources for everyone.</p>
     </section>
 
-    <section class="features-section">
+    <section class="features-section half">
       <h3>Key Features</h3>
       <ul>
         <li>Decentralized education platform</li>
@@ -51,13 +52,13 @@
       </ul>
     </section>
 
-    <section class="vr-section">
+    <section class="vr-section half">
       <h3>VR and Education</h3>
       <p>Virtual Reality (VR) can transform the educational experience by immersing students in interactive and engaging learning environments. With VR, students can explore historical sites, conduct virtual science experiments, and collaborate in virtual classrooms, making learning more effective and enjoyable.</p>
       
       <div class="vr-media">
         <div class="vr-image">
-          <img src="path/to/vr-image.jpg" alt="VR in Education" />
+          <img class="image" src="./images/65f3de83-9562-4ad8-aee3-79941d0f7f46.png" alt="VR in Education" />
           <p>Immersive learning with VR</p>
         </div>
         <div class="vr-video">
@@ -70,16 +71,16 @@
       </div>
     </section>
 
-    <section class="oni-vr-section">
+    <section class="oni-vr-section half">
       <h3>Oni as Your VR Teacher</h3>
       <p>Imagine having Oni, our advanced AI, as your personal VR teacher. Oni can provide personalized tutoring, real-time feedback, and an adaptive learning path tailored to each student's needs. This combination of VR and AI offers a unique and powerful educational experience.</p>
       
       <div class="oni-vr-media">
         <div class="oni-vr-image">
-          <img src="path/to/oni-vr-image.jpg" alt="Oni VR Teacher" />
+          <img class="image" src="./images/72ef84cc-aa93-4177-ab66-d461d8861fd5.png" alt="Oni VR Teacher" />
           <p>Oni guiding students in VR</p>
         </div>
-        <div class="oni-vr-video">
+        <div class="vr-video">
           <video controls>
             <source src="path/to/oni-vr-video.mp4" type="video/mp4">
             Your browser does not support the video tag.
@@ -89,12 +90,14 @@
       </div>
     </section>
 
-    <section class="call-to-action">
+    <section class="call-to-action half">
       <h3>Get Started with DeSchool</h3>
       <p>Join our community today and start learning with DeSchool!</p>
       <button>Sign Up</button>
     </section>
   </main>
+
+  <section class="margin-before-footer"/>
 
   <footer class="footer">
     <p>&copy; 2024 Pantheum Innovations. All rights reserved.</p>
