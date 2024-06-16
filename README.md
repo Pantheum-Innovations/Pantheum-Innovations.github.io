@@ -1,6 +1,6 @@
 # pantheum-innovations.github.io
 our website hosted on git
-[https://patheum.git](https://pantheum-innovations.github.io)
+[https://patheum.git](https://pantheum-innovations.github.io/src/index.html)
 other websites:
 [https://patheum.com](https://pantheuminno.weebly.com)
 [https://patheum.ai](https://pantheum.pyxl.ai/)
