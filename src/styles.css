@@ -4,8 +4,8 @@
     --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     --primary-color: #00aaff; /* Extracted blue color from the logo */
     --secondary-color: #333;
-    --background-color: #000;
-    --background-color-soft: #111;
+    --background-color: #0a0a00;
+    --background-color-soft: #222;
     --text-color: #ddd;
 }
 
