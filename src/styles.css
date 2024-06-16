@@ -4,8 +4,8 @@
     --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     --primary-color: #24d15e;
     --secondary-color: #333;
-    --background-color: #222;
-    --background-color-soft: #2a2a2a;
+    --background-color: #000;
+    --background-color-soft: #111;
     --text-color: #ddd;
 }
 
@@ -28,13 +28,25 @@ header {
 
 nav {
     font-family: monospace;
-
     display: flex;
     justify-content: flex-end; /* Align to the right */
     background-color: var(--background-color-soft);
     padding: 10px;
     border-bottom: 1px solid #333;
     box-shadow: 0 0 10px var(--box-shadow);
+    position: relative; /* Required for the glow effect */
+}
+
+nav::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -10px; /* Adjust as needed for the glow size */
+    height: 10px; /* Adjust as needed for the glow size */
+    background: var(--primary-color);
+    filter: blur(10px); /* Adjust for the desired glow effect */
+    z-index: -1; /* Ensures the glow is behind the nav bar */
 }
 
 nav ul {
@@ -98,7 +110,8 @@ nav .dropdown:hover .dropdown-content {
 .nav-logo {
     height: 1.425em;
     position: absolute;
-    left: 0.825em;}
+    left: 0.825em;
+}
 
 .header-logo {
     height: 400px;
@@ -126,7 +139,6 @@ nav .dropdown:hover .dropdown-content {
 
 .image, video {
     margin-top: 1em;
-
 }
 
 section {
@@ -225,6 +237,7 @@ section {
     text-align: center;
     box-shadow: 0 0 10px var(--box-shadow);
 }
+
 
 .call-to-action button {
     border: none;
