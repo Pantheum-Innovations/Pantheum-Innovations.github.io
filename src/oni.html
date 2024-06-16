@@ -6,95 +6,6 @@
     <title>Pantheum Innovations - Oni</title>
     <link rel="stylesheet" type="text/css" href="./oni.css">
     <link rel="stylesheet" type="text/css" href="./styles.css">
-    <style>
-        /* Add some basic styling for a dark and futuristic theme */
-        body {
-            background-color: #000000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-        }
-        .chatbot {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            height: 100vh;
-            padding: 20px;
-        }
-        .conversation-history {
-            width: 15%;
-            background-color: #111111;
-            padding: 20px;
-            border-right: 1px solid #222222;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-        }
-        .conversation-history ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .conversation-history li {
-            padding: 10px;
-            border-bottom: 1px solid #222222;
-            background-color: #111111;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-        }
-        .conversation-history li:last-child {
-            border-bottom: none;
-        }
-        .chat-input {
-            width: 70%;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .chat-input input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            background-color: #111111;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-        }
-        .chat-input button {
-            background-color: #4CAF50;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-        }
-        .chat-input button:hover {
-            background-color: #3e8e41;
-        }
-        .chat-input select, .chat-input label {
-            background-color: #111111;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-        }
-        .message-history {
-            padding: 10px;
-            border-bottom: 1px solid #222222;
-            overflow-y: auto;
-            height: 200px;
-            background-color: #111111;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-        }
-        .message-history li {
-            padding: 10px;
-            background-color: #222222;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -103,14 +14,16 @@
     </header>
 
     <nav class="nav-bar">
+        <img class="nav-logo" src="./images/logo.png"></img>
+
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="src/deschool.html">DeSchool</a></li>
-            <li><a href="src/uploads.html">Uploads Project</a></li>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./deschool.html">DeSchool</a></li>
+            <li><a href="./uploads.html">Uploads Project</a></li>
             <li class="dropdown">
-                <a href="src/oni.html" class="dropbtn">Oni</a>
+                <a href="./oni.html" class="dropbtn">Oni</a>
                 <div class="dropdown-content">
-                    <a href="src/oni.html">Hyper Chat</a>
+                    <a href="./oni.html">Hyper Chat</a>
                     <a href="#">Use Oni in your business</a>
                     <a href="#">ONI Support</a>
                 </div>
@@ -124,7 +37,7 @@
             <h2>Oni - Your Intelligent Assistant</h2>
             <p>Oni is a fully modular AGI system capable of performing a wide range of tasks. From data analysis to interactive dialogue, Oni is here to help.</p>
         </div>
-        <img src="src/images/bot.jpg" alt="Bot Image" width="100%" height="300px">
+        <img src="./images/bot.jpg" alt="Bot Image" width="100%" height="300px">
     </section>
 
     <div class="chatbot">
