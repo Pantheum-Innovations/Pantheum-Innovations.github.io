@@ -195,7 +195,6 @@ section {
 }
 
 .hero-section {
-    background-size: 100% 300px;
     background-position: 0% 100%;
     height: auto;
     display: flex;

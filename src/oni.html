@@ -8,11 +8,6 @@
     <link rel="stylesheet" type="text/css" href="./styles.css">
 </head>
 <body>
-    <header>
-        <h1>Pantheum Innovations</h1>
-        <p>Innovating for the Future</p>
-    </header>
-
     <nav class="nav-bar">
         <img class="nav-logo" src="./images/logo.png"></img>
 
@@ -31,58 +26,71 @@
         </ul>
     </nav>
 
+    <main class="main-content">
+        <section class="half">
+            <div class="hero">
+                <h2>Oni - Your Intelligent Assistant</h2>
+                <p>Oni is a fully modular AGI system capable of performing a wide range of tasks. From data analysis to interactive dialogue, Oni is here to help.</p>
+            </div>
+            <img class="image" src="./images/bot.jpg" alt="Bot Image">
+        </section>
 
-    <section>
-        <div class="hero">
-            <h2>Oni - Your Intelligent Assistant</h2>
-            <p>Oni is a fully modular AGI system capable of performing a wide range of tasks. From data analysis to interactive dialogue, Oni is here to help.</p>
-        </div>
-        <img src="./images/bot.jpg" alt="Bot Image" width="100%" height="300px">
-    </section>
+        <div class="chatbot">
+            <div class="conversation-history">
+                <h3>Conversation History</h3>
+                <ul id="conversation-history">
+                    <!-- Conversation history will be displayed here -->
+                </ul>
+                <button type="button" id="clear-history-button">Clear Conversation History</button>
+            </div>
+            <div class="chat-input">
+                <h3>Chat with Oni</h3>
+                <ul class="message-history" id="message-history">
+                    <!-- Message history will be displayed here -->
+                </ul>
+                <div>
+                    <p>
+                        <label for="agent-select">Choose Agent:</label>
+                        <select id="agent-select">
+                            <option value="agent1">Web Crawler</option>
+                            <option value="agent2">Coder</option>
+                            <option value="agent3">Translator</option>
+                            <option value="agent4">Councelor</option>
+                            <option value="agent5">Musician</option>
+                            <option value="agent6">Physicist</option>
+                            <option value="agent7">Artist</option>
+                        </select>
+                        <label for="memory-switch">Memory:</label>
+                        <select id="memory-switch">
+                            <option value="on">On</option>
+                            <option value="off">Off</option>
+                        </select>
+                        <label for="model-select">Choose Model:</label>
+                        <select id="model-select">
+                            <option value="model1">Hive</option>
+                            <option value="model2">Hyper</option>
+                        </select>
+                    </p>
+                    <p>
+                        <input type="text" id="chat-input" placeholder="Say something...">
+                    </p>
+                    <p>
+                        <button type="submit" id="send-button">Send</button>
+                        <button type="button" id="clear-button">Clear Conversation</button>
+                        <button type="button" id="file-button">Upload File</button>
+                        <button type="button" id="mic-button">Microphone</button>
+                        <button type="button" id="video-button">OniCam Chat</button>
+                    </p>
+                </div>
 
-    <div class="chatbot">
-        <div class="conversation-history">
-            <h3>Conversation History</h3>
-            <ul id="conversation-history">
-                <!-- Conversation history will be displayed here -->
-            </ul>
-            <button type="button" id="clear-history-button">Clear Conversation History</button>
+            </div>
         </div>
-        <div class="chat-input">
-            <h3>Chat with Oni</h3>
-            <ul class="message-history" id="message-history">
-                <!-- Message history will be displayed here -->
-            </ul>
-            <label for="agent-select">Choose Agent:</label>
-            <select id="agent-select">
-                <option value="agent1">Web Crawler</option>
-                <option value="agent2">Coder</option>
-                <option value="agent3">Translator</option>
-                <option value="agent4">Councelor</option>
-                <option value="agent5">Musician</option>
-                <option value="agent6">Physicist</option>
-                <option value="agent7">Artist</option>
-            </select>
-            <label for="memory-switch">Memory:</label>
-            <select id="memory-switch">
-                <option value="on">On</option>
-                <option value="off">Off</option>
-            </select>
-            <label for="model-select">Choose Model:</label>
-            <select id="model-select">
-                <option value="model1">Hive</option>
-                <option value="model2">Hyper</option>
-            </select>
-            <input type="text" id="chat-input" placeholder="Say something...">
-            <button type="submit" id="send-button">Send</button>
-            <button type="button" id="clear-button">Clear Conversation</button>
-            <button type="button" id="file-button">Upload File</button>
-            <button type="button" id="mic-button">Microphone</button>
-            <button type="button" id="video-button">OniCam Chat</button>
-        </div>
-    </div>
 
-    <iframe src="https://ahricat-google-gemma-7b.hf.space" frameborder="1" width="100%" height="420" border-radius="10px" box-shadow="0 0 15px rgba(0, 255, 0, 0.5)"></iframe>
+        <iframe src="https://ahricat-google-gemma-7b.hf.space" frameborder="1" width="100%" height="420" border-radius="10px" box-shadow="0 0 15px rgba(0, 255, 0, 0.5)"></iframe>
+
+    </main>
+
+    <section class="margin-before-footer"/>
 
     <footer>
         <p>&copy; 2024 Pantheum Innovations. All rights reserved.</p>
