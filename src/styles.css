@@ -105,6 +105,13 @@ nav .dropdown:hover .dropdown-content {
     height: 400px;
 }
 
+@media screen and (max-width: 590px) {
+    .header-logo {
+        height: auto;
+        width: 100%;
+    }
+}
+
 .hero {
     background-color: var(--background-color);
     padding: 0.825em;
@@ -261,6 +268,12 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+
+@media screen and (max-width: 590px) {
+    footer {
+        width: auto;
+    }
 }
 
 .margin-before-footer {
