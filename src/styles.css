@@ -2,7 +2,7 @@
 
 :root {
     --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    --primary-color: #24d15e;
+    --primary-color: #00aaff; /* Extracted blue color from the logo */
     --secondary-color: #333;
     --background-color: #000;
     --background-color-soft: #111;
@@ -237,7 +237,6 @@ section {
     text-align: center;
     box-shadow: 0 0 10px var(--box-shadow);
 }
-
 
 .call-to-action button {
     border: none;
