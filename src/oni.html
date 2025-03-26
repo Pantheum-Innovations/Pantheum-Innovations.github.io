@@ -3,60 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oni by Pantheum Innovations - Intelligent AI Assistant</title>
-    <style>
-        /* Baseline Dark Theme Preview CSS */
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-        }
-        .preview-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #1e1e1e;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .chat-preview {
-            background-color: #2c2c2c;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .system-prompt-section {
-            background-color: #3a3a3a;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #3c3c3c;
-            border: 1px solid #555;
-            color: #e0e0e0;
-            border-radius: 6px;
-        }
-        button {
-            background-color: #4a4a4a;
-            color: #e0e0e0;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #5a5a5a;
-        }
-    </style>
+    <title>Pantheum Innovations - Oni</title>
+    <link rel="stylesheet" type="text/css" href="./oni.css">
+    <link rel="stylesheet" type="text/css" href="./styles.css">
 </head>
+<body>
+    <nav class="nav-bar">
+        <img class="nav-logo" src="./images/logo.png"></img>
+
+        <ul>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./deschool.html">DeSchool</a></li>
+            <li><a href="./uploads.html">Uploads Project</a></li>
+            <li class="dropdown">
+                <a href="./oni.html" class="dropbtn">Oni</a>
+                <div class="dropdown-content">
+                    <a href="./oni.html">Hyper Chat</a>
+                    <a href="./model_builder.html">Use Oni in your business</a>
+                    <a href="#">ONI Support</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    <elevenlabs-convai agent-id="JQHdJ1XCz7XT4lhrLVeT"></elevenlabs-convai><script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
+    <main class="main-content">
+        <section class="half">
+            <div class="hero">
+                <h2>Oni - Your Intelligent Assistant</h2>
+                <p>Oni is a fully modular AGI system capable of performing a wide range of tasks. From data analysis to interactive dialogue, Oni is here to help.</p>
+            </div>
+            <img class="image" src="./images/bot.jpg" alt="Bot Image">
+        </section>
+
+        <div class="chatbot">
+            <div class="conversation-history">
+                <h3>Conversation History</h3>
+                <ul id="conversation-history">
+                    <!-- Conversation history will be displayed here -->
+                </ul>
+                <button type="button" id="clear-history-button">Clear Conversation History</button>
+            </div>
+            <div class="chat-input">
+                <h3>Chat with Oni</h3>
+                <ul class="message-history" id="message-history">
+                    <!-- Message history will be displayed here -->
+                </ul>
+                <div>
 <body class="preview-container">
     <div class="chat-preview">
         <h2>Oni AI Chat Interface</h2>
