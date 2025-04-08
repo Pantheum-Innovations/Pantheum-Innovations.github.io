@@ -53,50 +53,30 @@
     .btn:hover {
       background-color: #008b96;
     }
-    .input {
+    .input, .select {
       padding: 12px;
       margin: 10px 0;
       width: 100%;
-      border: 1px solid #4a4a4a;
       border-radius: 8px;
       background: #333;
       color: white;
       font-size: 1rem;
     }
     .select {
-      padding: 10px;
-      margin: 10px 0;
-      width: 100%;
-      border-radius: 8px;
       background: #444;
-      color: white;
-      font-size: 1rem;
     }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
+    .chat-box {
+      margin-top: 30px;
       background: #2c3e50;
-      color: white;
-      padding: 40px;
-      border-radius: 10px;
-      text-align: center;
-    }
-    .modal-button {
-      background-color: #00bcd4;
-      color: white;
-      padding: 10px 20px;
+      padding: 15px;
       border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      background: #34495e;
+      border-radius: 8px;
+      color: white;
     }
   </style>
 </head>
@@ -109,157 +89,101 @@
     </div>
 
     <div class="card">
-      <div class="form-group">
-        <label for="agent-select" class="text-white">Select Agent:</label>
-        <select id="agent-select" class="select">
-          <option value="agent1">Search</option>
-          <option value="agent2">Agent</option>
-          <option value="agent3">Video Chat</option>
-        </select>
-      </div>
+      <h2>Settings</h2>
+      <label for="agent-select">Select Agent:</label>
+      <select id="agent-select" class="select">
+        <option value="agent1">Agent 1</option>
+        <option value="agent2">Agent 2</option>
+      </select>
 
-      <div class="form-group">
-        <label for="model-select" class="text-white">Select Model:</label>
-        <select id="model-select" class="select">
-          <option value="model1">Oni-Micro</option>
-          <option value="model2">Oni-Mini</option>
-          <option value="model3">Oni-Hyper</option>
-        </select>
-      </div>
+      <label for="model-select">Select Model:</label>
+      <select id="model-select" class="select">
+        <option value="gpt3">GPT-3</option>
+        <option value="gpt4">GPT-4</option>
+      </select>
 
-      <div class="form-group">
-        <label for="system-prompt-input" class="text-white">System Prompt:</label>
-        <input type="text" id="system-prompt-input" class="input" placeholder="Enter system prompt..." />
-      </div>
+      <label for="system-prompt">System Prompt:</label>
+      <input type="text" id="system-prompt" class="input" placeholder="Enter your system prompt">
 
-      <div class="form-group">
-        <label class="text-white" for="memory-switch">
-          <input type="checkbox" id="memory-switch" /> Enable Memory
-        </label>
-      </div>
+      <label for="memory-switch">Enable Memory:</label>
+      <input type="checkbox" id="memory-switch">
 
       <button id="start-chat" class="btn">Start Chat</button>
     </div>
-  </div>
 
-  <!-- Modal for Feedback -->
-  <div id="feedback-modal" class="modal">
-    <div class="modal-content">
-      <h2>Chat Configuration Ready!</h2>
-      <p>Your chat is ready to begin with the selected configurations.</p>
-      <button class="modal-button" onclick="closeModal()">Close</button>
+    <!-- Chat Section -->
+    <div class="chat-box">
+      <div id="chat-messages">
+        <!-- Messages will be appended here -->
+      </div>
+      <input type="text" id="user-input" class="input" placeholder="Type a message..." />
+      <button id="send-message" class="btn">Send</button>
     </div>
   </div>
 
-  <script type="text/babel">
-    const { useState } = React;
+  <script>
+    const startChatButton = document.getElementById('start-chat');
+    const userInput = document.getElementById('user-input');
+    const sendMessageButton = document.getElementById('send-message');
+    const chatMessages = document.getElementById('chat-messages');
 
-    // Initialize states and values
-    const DEFAULT_ONI_PROMPT = "Welcome to Oni, your personal assistant.";
+    startChatButton.addEventListener('click', function () {
+      const selectedAgent = document.getElementById('agent-select').value;
+      const selectedModel = document.getElementById('model-select').value;
+      const systemPrompt = document.getElementById('system-prompt').value.trim() || 'Default prompt';
+      const memoryEnabled = document.getElementById('memory-switch').checked;
 
-    const Component = () => {
-      const [selectedAgent, setSelectedAgent] = useState("agent1");
-      const [selectedModel, setSelectedModel] = useState("model1");
-      const [systemPrompt, setSystemPrompt] = useState(DEFAULT_ONI_PROMPT);
-      const [memoryEnabled, setMemoryEnabled] = useState(false);
+      console.log('Chat Started', {
+        agent: selectedAgent,
+        model: selectedModel,
+        systemPrompt: systemPrompt,
+        memoryEnabled: memoryEnabled
+      });
 
-      // Function to handle chat start
-      const handleStartChat = () => {
-        console.log('Chat Started', {
+      // Sending settings data to the server (placeholder URL)
+      fetch('https://your-server-url.com/start-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           agent: selectedAgent,
           model: selectedModel,
           systemPrompt: systemPrompt,
           memoryEnabled: memoryEnabled
-        });
-        
-        // Show modal on chat start
-        document.getElementById("feedback-modal").style.display = "flex";
-      };
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Server Response:', data);
+      })
+      .catch(error => console.error('Error:', error));
+    });
 
-      const closeModal = () => {
-        document.getElementById("feedback-modal").style.display = "none";
-      };
+    sendMessageButton.addEventListener('click', function () {
+      const message = userInput.value;
+      if (message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.textContent = `[User]: ${message}`;
+        chatMessages.appendChild(messageElement);
 
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-800 to-black text-white p-4">
-          <div className="max-w-5xl mx-auto py-12">
-            <div className="text-center mb-10">
-              <h1 className="text-5xl font-bold text-cyan-400 mb-2 drop-shadow-xl">
-                Oni Interaction Hub
-              </h1>
-              <p className="text-lg text-zinc-300">
-                Interface for managing conversations, agents, and media inputs.
-              </p>
-            </div>
+        // Sending message to the server (placeholder)
+        fetch('https://your-server-url.com/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+          const assistantMessage = document.createElement('div');
+          assistantMessage.classList.add('message');
+          assistantMessage.textContent = `[Assistant]: ${data.reply || 'Placeholder response'}`;
+          chatMessages.appendChild(assistantMessage);
+        })
+        .catch(error => console.error('Error:', error));
 
-            <div className="bg-zinc-850/90 border border-zinc-700 rounded-3xl shadow-lg p-6">
-              <div>
-                <label htmlFor="agent-select" className="text-white">Select Agent:</label>
-                <select
-                  id="agent-select"
-                  className="select"
-                  value={selectedAgent}
-                  onChange={e => setSelectedAgent(e.target.value)}
-                >
-                  <option value="agent1">Search</option>
-                  <option value="agent2">Agent</option>
-                  <option value="agent3">VideoChat</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="model-select" className="text-white">Select Model:</label>
-                <select
-                  id="model-select"
-                  className="select"
-                  value={selectedModel}
-                  onChange={e => setSelectedModel(e.target.value)}
-                >
-                  <option value="model1">Oni-Micro</option>
-                  <option value="model2">Oni-Mini</option>
-                  <option value="model3">Oni-Hyper</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="system-prompt-input" className="text-white">System Prompt:</label>
-                <input
-                  type="text"
-                  id="system-prompt-input"
-                  className="input"
-                  placeholder="Enter system prompt..."
-                  value={systemPrompt}
-                  onChange={e => setSystemPrompt(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="text-white" htmlFor="memory-switch">
-                  <input
-                    type="checkbox"
-                    id="memory-switch"
-                    checked={memoryEnabled}
-                    onChange={e => setMemoryEnabled(e.target.checked)}
-                  /> Enable Memory
-                </label>
-              </div>
-
-              <button id="start-chat" className="btn" onClick={handleStartChat}>Start Chat</button>
-            </div>
-          </div>
-
-          <div id="feedback-modal" className="modal">
-            <div className="modal-content">
-              <h2>Chat Configuration Ready!</h2>
-              <p>Your chat is ready to begin with the selected configurations.</p>
-              <button className="modal-button" onClick={closeModal}>Close</button>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    ReactDOM.render(<Component />, document.getElementById('root'));
+        userInput.value = '';  // Clear input field after sending
+      }
+    });
   </script>
 
 </body>
