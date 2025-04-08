@@ -1,139 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pantheum Innovations - Oni</title>
-    <link rel="stylesheet" type="text/css" href="./oni.css">
-    <link rel="stylesheet" type="text/css" href="./styles.css">
-</head>
-<body>
-    <nav class="nav-bar">
-        <img class="nav-logo" src="./images/logo.png"></img>
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
-        <ul>
-            <li><a href="./index.html">Home</a></li>
-            <li><a href="./deschool.html">DeSchool</a></li>
-            <li><a href="./uploads.html">Uploads Project</a></li>
-            <li class="dropdown">
-                <a href="./oni.html" class="dropbtn">Oni</a>
-                <div class="dropdown-content">
-                    <a href="./oni.html">Hyper Chat</a>
-                    <a href="./model_builder.html">Use Oni in your business</a>
-                    <a href="#">ONI Support</a>
+export default function Component() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-800 to-black text-white p-4">
+      <motion.div
+        className="max-w-5xl mx-auto py-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="text-center mb-10">
+          <h1 className="text-5xl font-bold text-cyan-400 mb-2 drop-shadow-xl">
+            Oni Interaction Hub
+          </h1>
+          <p className="text-lg text-zinc-300">
+            Interface for managing conversations, agents, and media inputs.
+          </p>
+        </div>
+
+        <Card className="bg-zinc-850/90 border border-zinc-700 rounded-3xl shadow-lg">
+          <CardContent className="p-6">
+            <Tabs defaultValue="chat">
+              <TabsList className="grid grid-cols-3 bg-zinc-900 text-cyan-300 shadow-inner">
+                <TabsTrigger value="chat" className="hover:text-cyan-400 transition-all">Chat</TabsTrigger>
+                <TabsTrigger value="voice" className="hover:text-cyan-400 transition-all">Voice</TabsTrigger>
+                <TabsTrigger value="video" className="hover:text-cyan-400 transition-all">Video</TabsTrigger>
+              </TabsList>
+              <TabsContent value="chat">
+                <ScrollArea className="h-64 p-4 bg-zinc-800 rounded-xl border border-zinc-700">
+                  <div className="space-y-2">
+                    <p className="text-sm text-cyan-100">[Assistant]: Welcome back, Oni.</p>
+                    <p className="text-sm text-zinc-300">[User]: What's the current system load?</p>
+                    <p className="text-sm text-cyan-100">[Assistant]: 27% and holding.</p>
+                  </div>
+                </ScrollArea>
+                <div className="mt-4 flex items-center space-x-2">
+                  <Input placeholder="Send a command or message..." className="bg-zinc-800 border-zinc-600 text-white" />
+                  <Button className="bg-cyan-600 hover:bg-cyan-500 transition-colors">Send</Button>
                 </div>
-            </li>
-        </ul>
-    </nav>
-    <elevenlabs-convai agent-id="JQHdJ1XCz7XT4lhrLVeT"></elevenlabs-convai><script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
-    <main class="main-content">
-        <section class="half">
-            <div class="hero">
-                <h2>Oni - Your Intelligent Assistant</h2>
-                <p>Oni is a fully modular AGI system capable of performing a wide range of tasks. From data analysis to interactive dialogue, Oni is here to help.</p>
-            </div>
-            <img class="image" src="./images/bot.jpg" alt="Bot Image">
-        </section>
+              </TabsContent>
+              <TabsContent value="voice">
+                <div className="space-y-4 text-center">
+                  <p className="text-zinc-300">Voice interaction module is initializing...</p>
+                  <Button className="bg-purple-600 hover:bg-purple-500">Start Listening</Button>
+                </div>
+              </TabsContent>
+              <TabsContent value="video">
+                <div className="space-y-4 text-center">
+                  <p className="text-zinc-300">Video module coming soon. Stand by.</p>
+                  <Button className="bg-pink-600 hover:bg-pink-500">Activate Camera</Button>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
 
-        <div class="chatbot">
-            <div class="conversation-history">
-                <h3>Conversation History</h3>
-                <ul id="conversation-history">
-                    <!-- Conversation history will be displayed here -->
-                </ul>
-                <button type="button" id="clear-history-button">Clear Conversation History</button>
-            </div>
-            <div class="chat-input">
-                <h3>Chat with Oni</h3>
-                <ul class="message-history" id="message-history">
-                    <!-- Message history will be displayed here -->
-                </ul>
-                <div>
-<body class="preview-container">
-    <div class="chat-preview">
-        <h2>Oni AI Chat Interface</h2>
-        <div class="system-prompt-section">
-            <h3>System Prompt</h3>
-            <textarea id="system-prompt" placeholder="Enter custom system prompt (optional)"></textarea>
-            <small>Default Oni prompt will be used if left blank</small>
-        </div>
-        
-        <div>
-            <label>Choose Agent:</label>
-            <select id="agent-select">
-                <option value="default">Standard Oni Assistant</option>
-                <option value="search">Internet Search</option>
-                <option value="security">🛡️ Internet Security Monitor</option>
-                <option value="coder">💻 Code Assistant</option>
-            </select>
-        </div>
-        
-        <div>
-            <label>Choose Model:</label>
-            <select id="model-select">
-                <option value="oni">ONi (Full Capability)</option>
-                <option value="oni-mini">ONi-Mini (Lightweight)</option>
-            </select>
-        </div>
-        
-        <div>
-            <label>
-                <input type="checkbox" id="memory-switch"> 
-                Context Memory
-                <small>(Disabled in Security Mode)</small>
-            </label>
-        </div>
-        
-        <div id="code-preview" style="display: none;">
-            <h3>Code Preview Area</h3>
-            <pre><code id="code-output">// Code will appear here when generated</code></pre>
-        </div>
-        
-        <div>
-            <button id="start-chat">Start Conversation</button>
-        </div>
+        <motion.div
+          className="mt-12 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 1 }}
+        >
+          <p className="text-zinc-500 text-sm italic">
+            Oni is your modular intelligence agent. Every interaction strengthens the mind.
+          </p>
+        </motion.div>
+      </motion.div>
     </div>
-
-    <script>
-        const agentSelect = document.getElementById('agent-select');
-        const memorySwitch = document.getElementById('memory-switch');
-        const codePreview = document.getElementById('code-preview');
-        const systemPromptInput = document.getElementById('system-prompt');
-
-        // Oni Default System Prompt
-        const DEFAULT_ONI_PROMPT = `You are Oni, an advanced AI assistant created by Pantheum Innovations. 
-Your goal is to be helpful, intelligent, and adaptive. Provide comprehensive and nuanced responses, 
-demonstrating deep understanding while maintaining an engaging conversational style.`;
-
-        agentSelect.addEventListener('change', function() {
-            // Disable memory for security mode
-            if (this.value === 'security') {
-                memorySwitch.checked = false;
-                memorySwitch.disabled = true;
-            } else {
-                memorySwitch.disabled = false;
-            }
-
-            // Show code preview for coder
-            codePreview.style.display = 
-                this.value === 'coder' ? 'block' : 'none';
-        });
-
-        document.getElementById('start-chat').addEventListener('click', function() {
-            const selectedAgent = agentSelect.value;
-            const selectedModel = document.getElementById('model-select').value;
-            const systemPrompt = systemPromptInput.value.trim() || DEFAULT_ONI_PROMPT;
-            
-            console.log('Chat Started', {
-                agent: selectedAgent,
-                model: selectedModel,
-                systemPrompt: systemPrompt,
-                memoryEnabled: memorySwitch.checked
-            });
-            
-            // In a real implementation, this would initialize the chat
-            alert('Chat configuration ready! (Placeholder)');
-        });
-    </script>
-</body>
-</html>
+  );
+}
