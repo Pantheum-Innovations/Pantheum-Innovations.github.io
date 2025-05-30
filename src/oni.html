@@ -1,192 +1,883 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oni Interaction Hub</title>
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #1a202c;
-      color: white;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    h1 {
-      font-size: 3rem;
-      color: #00bcd4;
-      font-weight: bold;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-    }
-    p {
-      font-size: 1.1rem;
-      color: #B0B0B0;
-    }
-    .card {
-      background: rgba(33, 33, 33, 0.8);
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    }
-    .btn {
-      background-color: #00bcd4;
-      padding: 12px 20px;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .btn:hover {
-      background-color: #008b96;
-    }
-    .input, .select {
-      padding: 12px;
-      margin: 10px 0;
-      width: 100%;
-      border-radius: 8px;
-      background: #333;
-      color: white;
-      font-size: 1rem;
-    }
-    .select {
-      background: #444;
-    }
-    .chat-box {
-      margin-top: 30px;
-      background: #2c3e50;
-      padding: 15px;
-      border-radius: 8px;
-    }
-    .message {
-      margin: 10px 0;
-      padding: 10px;
-      background: #34495e;
-      border-radius: 8px;
-      color: white;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONI Nexus - Multimodal AI System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
+        
+        :root {
+            --neon-cyan: #00ffff;
+            --neon-purple: #8b5cf6;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --dark-bg: #0a0a0f;
+            --panel-bg: rgba(15, 15, 25, 0.9);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            z-index: -2;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+        }
+
+        .main-container {
+            display: flex;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Left Panel - Chat */
+        .chat-panel {
+            flex: 1;
+            background: var(--panel-bg);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 0 30px rgba(0, 255, 255, 0.2),
+                inset 0 0 20px rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Header */
+        .nexus-header {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(0, 255, 255, 0.3));
+            padding: 25px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .nexus-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 0 20px var(--neon-cyan);
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+
+        .nexus-subtitle {
+            font-size: 14px;
+            color: var(--neon-cyan);
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .status-indicators {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Messages Area */
+        .neural-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .quantum-message {
+            max-width: 80%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+            position: relative;
+            animation: materialize 0.5s ease-out;
+        }
+
+        @keyframes materialize {
+            0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .user-transmission {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(255, 0, 255, 0.6));
+            color: white;
+            align-self: flex-end;
+            border: 1px solid rgba(255, 0, 255, 0.5);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+
+        .ai-response {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(57, 255, 20, 0.1));
+            color: var(--neon-cyan);
+            align-self: flex-start;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .processing-core {
+            display: none;
+            align-self: flex-start;
+            background: rgba(0, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .neural-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .neural-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            animation: neuralPulse 1.5s infinite ease-in-out;
+        }
+
+        .neural-dot:nth-child(2) { animation-delay: 0.3s; }
+        .neural-dot:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes neuralPulse {
+            0%, 60%, 100% { transform: scale(1); opacity: 0.3; }
+            30% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 10px var(--neon-cyan); }
+        }
+
+        /* Input Area */
+        .quantum-input-zone {
+            padding: 25px;
+            background: rgba(15, 15, 25, 0.9);
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .multimodal-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .mode-button {
+            padding: 8px 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            color: var(--neon-cyan);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .mode-button:hover, .mode-button.active {
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .input-matrix {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .neural-input {
+            flex: 1;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 25px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .neural-input:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .neural-input::placeholder {
+            color: rgba(0, 255, 255, 0.5);
+        }
+
+        .quantum-button {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .quantum-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+        }
+
+        .file-upload-zone {
+            margin-top: 15px;
+            padding: 20px;
+            border: 2px dashed rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            text-align: center;
+            color: rgba(0, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .file-upload-zone.active {
+            display: block;
+        }
+
+        .file-upload-zone:hover {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        /* Right Panel - Capabilities */
+        .capabilities-panel {
+            width: 300px;
+            background: var(--panel-bg);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 0 30px rgba(139, 92, 246, 0.2),
+                inset 0 0 20px rgba(255, 255, 255, 0.05);
+            padding: 25px;
+        }
+
+        .capability-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            color: var(--neon-purple);
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .capability-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .capability-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateX(5px);
+        }
+
+        .capability-icon {
+            width: 20px;
+            height: 20px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .system-stats {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .stat-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: var(--neon-cyan);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+            animation: progressFlow 2s ease-in-out infinite;
+        }
+
+        @keyframes progressFlow {
+            0%, 100% { width: 70%; }
+            50% { width: 95%; }
+        }
+
+        .welcome-transmission {
+            text-align: center;
+            color: rgba(0, 255, 255, 0.7);
+            padding: 60px 20px;
+            font-size: 16px;
+        }
+
+        .welcome-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--neon-cyan), var(--neon-purple));
+            border-radius: 10px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .capabilities-panel {
+                width: 100%;
+                height: 200px;
+                overflow-y: auto;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <div class="container">
-    <div class="header">
-      <h1>Oni Interaction Hub</h1>
-      <p>Interface for managing conversations, agents, and media inputs.</p>
+    <div class="background"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="main-container">
+        <div class="chat-panel">
+            <div class="nexus-header">
+                <div class="nexus-title">ONI NEXUS</div>
+                <div class="nexus-subtitle">Advanced Multimodal AI Interface • Neural Network Online</div>
+                <div class="status-indicators">
+                    <div class="status-dot"></div>
+                    <div class="status-dot" style="animation-delay: 0.5s;"></div>
+                    <div class="status-dot" style="animation-delay: 1s;"></div>
+                </div>
+            </div>
+            
+            <div class="neural-messages" id="neuralMessages">
+                <div class="welcome-transmission">
+                    <div class="welcome-icon">🧠</div>
+                    <div>Neural pathways initialized. Multimodal processing core online.<br>
+                    Ready for text, image, audio, and code analysis.</div>
+                </div>
+            </div>
+            
+            <div class="processing-core" id="processingCore">
+                <div class="neural-dots">
+                    <div class="neural-dot"></div>
+                    <div class="neural-dot"></div>
+                    <div class="neural-dot"></div>
+                </div>
+            </div>
+            
+            <div class="quantum-input-zone">
+                <div class="multimodal-controls">
+                    <div class="mode-button active" data-mode="text">💬 TEXT</div>
+                    <div class="mode-button" data-mode="image">🖼️ IMAGE</div>
+                    <div class="mode-button" data-mode="audio">🎵 AUDIO</div>
+                    <div class="mode-button" data-mode="code">💻 CODE</div>
+                    <div class="mode-button" data-mode="vision">👁️ VISION</div>
+                </div>
+                
+                <div class="input-matrix">
+                    <input 
+                        type="text" 
+                        class="neural-input" 
+                        id="neuralInput" 
+                        placeholder="Initialize neural transmission..."
+                        maxlength="1000"
+                    >
+                    <button class="quantum-button" id="quantumSend">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="file-upload-zone" id="fileUploadZone">
+                    <div>📁 Drop files here or click to upload</div>
+                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">
+                        Supports: Images, Audio, Documents, Code Files
+                    </div>
+                    <input type="file" id="fileInput" style="display: none;" multiple 
+                           accept="image/*,audio/*,.txt,.py,.js,.html,.css,.json,.md">
+                </div>
+            </div>
+        </div>
+        
+        <div class="capabilities-panel">
+            <div class="capability-section">
+                <div class="section-title">🚀 Core Systems</div>
+                <div class="capability-item">
+                    <div class="capability-icon">🧠</div>
+                    <div>Neural Language Processing</div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">👁️</div>
+                    <div>Computer Vision Analysis</div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">🎵</div>
+                    <div>Audio Pattern Recognition</div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">💻</div>
+                    <div>Code Generation & Debug</div>
+                </div>
+            </div>
+            
+            <div class="capability-section">
+                <div class="section-title">⚡ Advanced Features</div>
+                <div class="capability-item">
+                    <div class="capability-icon">🔗</div>
+                    <div>Chain-of-Thought Reasoning</div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">🎯</div>
+                    <div>Context-Aware Responses</div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">🔄</div>
+                    <div>Continuous Learning</div>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">⚛️</div>
+                    <div>Quantum Processing Core</div>
+                </div>
+            </div>
+            
+            <div class="system-stats">
+                <div class="section-title">📊 System Status</div>
+                <div class="stat-bar">
+                    <span>Neural Efficiency</span>
+                    <span>94%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 94%;"></div>
+                </div>
+                
+                <div class="stat-bar">
+                    <span>Memory Allocation</span>
+                    <span>78%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 78%;"></div>
+                </div>
+                
+                <div class="stat-bar">
+                    <span>Processing Power</span>
+                    <span>89%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 89%;"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="card">
-      <h2>Settings</h2>
-      <label for="agent-select">Select Agent:</label>
-      <select id="agent-select" class="select">
-        <option value="agent1">Search</option>
-        <option value="agent2">Reason</option>
-        <option value="agent3">Video Chat</option>
-      </select>
+    <script>
+        class ONINexusInterface {
+            constructor() {
+                this.currentMode = 'text';
+                this.conversationHistory = [];
+                this.uploadedFiles = [];
+                
+                this.neuralMessages = document.getElementById('neuralMessages');
+                this.neuralInput = document.getElementById('neuralInput');
+                this.quantumSend = document.getElementById('quantumSend');
+                this.processingCore = document.getElementById('processingCore');
+                this.fileUploadZone = document.getElementById('fileUploadZone');
+                this.fileInput = document.getElementById('fileInput');
+                
+                this.initializeNeuralNetwork();
+                this.createFloatingParticles();
+            }
 
-      <label for="model-select">Select Model:</label>
-      <select id="model-select" class="select">
-        <option value="gpt3">OnI-Mini</option>
-        <option value="gpt4">OnI</option>
-      </select>
+            initializeNeuralNetwork() {
+                // Mode switching
+                document.querySelectorAll('.mode-button').forEach(button => {
+                    button.addEventListener('click', () => this.switchMode(button.dataset.mode));
+                });
 
-      <label for="system-prompt">System Prompt:</label>
-      <input type="text" id="system-prompt" class="input" placeholder="Enter your system prompt">
+                // Message transmission
+                this.quantumSend.addEventListener('click', () => this.transmitMessage());
+                this.neuralInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.transmitMessage();
+                    }
+                });
 
-      <label for="memory-switch">Enable Memory:</label>
-      <input type="checkbox" id="memory-switch">
+                // File upload system
+                this.fileUploadZone.addEventListener('click', () => this.fileInput.click());
+                this.fileInput.addEventListener('change', (e) => this.processFiles(e.target.files));
+                
+                // Drag and drop
+                this.fileUploadZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    this.fileUploadZone.style.borderColor = 'var(--neon-cyan)';
+                });
+                
+                this.fileUploadZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    this.fileUploadZone.style.borderColor = 'rgba(0, 255, 255, 0.3)';
+                    this.processFiles(e.dataTransfer.files);
+                });
 
-      <button id="start-chat" class="btn">Start Chat</button>
-    </div>
+                // Input validation
+                this.neuralInput.addEventListener('input', () => {
+                    this.quantumSend.style.opacity = this.neuralInput.value.trim() ? '1' : '0.5';
+                });
+            }
 
-    <!-- Chat Section -->
-    <div class="chat-box">
-      <div id="chat-messages">
-        <!-- Messages will be appended here -->
-      </div>
-      <input type="text" id="user-input" class="input" placeholder="Type a message..." />
-      <button id="send-message" class="btn">Send</button>
-    </div>
-  </div>
+            createFloatingParticles() {
+                const particleCount = 20;
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 6 + 's';
+                    particle.style.animationDuration = (3 + Math.random() * 6) + 's';
+                    document.body.appendChild(particle);
+                }
+            }
 
-  <script>
-    const startChatButton = document.getElementById('start-chat');
-    const userInput = document.getElementById('user-input');
-    const sendMessageButton = document.getElementById('send-message');
-    const chatMessages = document.getElementById('chat-messages');
+            switchMode(mode) {
+                this.currentMode = mode;
+                
+                // Update active button
+                document.querySelectorAll('.mode-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+                
+                // Update placeholder and show/hide file upload
+                const placeholders = {
+                    text: 'Initialize neural transmission...',
+                    image: 'Describe what you want to analyze or upload an image...',
+                    audio: 'Upload audio file for analysis or describe audio task...',
+                    code: 'Enter code or describe programming task...',
+                    vision: 'Upload image for computer vision analysis...'
+                };
+                
+                this.neuralInput.placeholder = placeholders[mode];
+                
+                // Show file upload for non-text modes
+                if (mode !== 'text') {
+                    this.fileUploadZone.classList.add('active');
+                } else {
+                    this.fileUploadZone.classList.remove('active');
+                }
+            }
 
-    startChatButton.addEventListener('click', function () {
-      const selectedAgent = document.getElementById('agent-select').value;
-      const selectedModel = document.getElementById('model-select').value;
-      const systemPrompt = document.getElementById('system-prompt').value.trim() || 'Default prompt';
-      const memoryEnabled = document.getElementById('memory-switch').checked;
+            processFiles(files) {
+                Array.from(files).forEach(file => {
+                    this.uploadedFiles.push(file);
+                    this.addMessage(`📎 Uploaded: ${file.name} (${this.formatFileSize(file.size)})`, 'system');
+                    
+                    // Show file preview for images
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.addMessage(`🖼️ Image Preview: <img src="${e.target.result}" style="max-width: 200px; border-radius: 10px; margin-top: 10px;">`, 'system');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
 
-      console.log('Chat Started', {
-        agent: selectedAgent,
-        model: selectedModel,
-        systemPrompt: systemPrompt,
-        memoryEnabled: memoryEnabled
-      });
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
 
-      // Sending settings data to the server (placeholder URL)
-      fetch('https://your-server-url.com/start-chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          agent: selectedAgent,
-          model: selectedModel,
-          systemPrompt: systemPrompt,
-          memoryEnabled: memoryEnabled
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Server Response:', data);
-      })
-      .catch(error => console.error('Error:', error));
-    });
+            addMessage(content, type = 'user') {
+                const messageDiv = document.createElement('div');
+                
+                if (type === 'system') {
+                    messageDiv.className = 'quantum-message ai-response';
+                    messageDiv.style.fontSize = '12px';
+                    messageDiv.style.opacity = '0.8';
+                } else {
+                    messageDiv.className = `quantum-message ${type === 'user' ? 'user-transmission' : 'ai-response'}`;
+                }
+                
+                messageDiv.innerHTML = content;
+                
+                // Remove welcome message
+                const welcome = this.neuralMessages.querySelector('.welcome-transmission');
+                if (welcome) welcome.remove();
+                
+                this.neuralMessages.appendChild(messageDiv);
+                this.scrollToBottom();
+                
+                return messageDiv;
+            }
 
-    sendMessageButton.addEventListener('click', function () {
-      const message = userInput.value;
-      if (message) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message');
-        messageElement.textContent = `[User]: ${message}`;
-        chatMessages.appendChild(messageElement);
+            showProcessingCore() {
+                this.processingCore.style.display = 'block';
+                this.scrollToBottom();
+            }
 
-        // Sending message to the server (placeholder)
-        fetch('https://your-server-url.com/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: message })
-        })
-        .then(response => response.json())
-        .then(data => {
-          const assistantMessage = document.createElement('div');
-          assistantMessage.classList.add('message');
-          assistantMessage.textContent = `[Assistant]: ${data.reply || 'Placeholder response'}`;
-          chatMessages.appendChild(assistantMessage);
-        })
-        .catch(error => console.error('Error:', error));
+            hideProcessingCore() {
+                this.processingCore.style.display = 'none';
+            }
 
-        userInput.value = '';  // Clear input field after sending
-      }
-    });
-  </script>
+            scrollToBottom() {
+                setTimeout(() => {
+                    this.neuralMessages.scrollTop = this.neuralMessages.scrollHeight;
+                }, 100);
+            }
 
+            async transmitMessage() {
+                const message = this.neuralInput.value.trim();
+                if (!message && this.uploadedFiles.length === 0) return;
+
+                // Create transmission context
+                const context = {
+                    mode: this.currentMode,
+                    message: message,
+                    files: this.uploadedFiles.map(f => ({name: f.name, type: f.type, size: f.size})),
+                    timestamp: Date.now()
+                };
+
+                // Add user message
+                if (message) {
+                    this.addMessage(`${this.getModeIcon()} ${message}`, 'user');
+                }
+
+                // Clear input
+                this.neuralInput.value = '';
+                this.quantumSend.style.opacity = '0.5';
+                this.uploadedFiles = [];
+
+                // Show processing
+                this.showProcessingCore();
+
+                try {
+                    const response = await this.callONINexusAPI(context);
+                    this.hideProcessingCore();
+                    this.addMessage(response, 'ai');
+                    this.conversationHistory.push({user: message, ai: response, mode: this.currentMode});
+                } catch (error) {
+                    this.hideProcessingCore();
+                    this.addMessage('❌ Neural network error detected. Attempting recovery...', 'ai');
+                    console.error('Nexus Error:', error);
+                }
+            }
+
+            getModeIcon() {
+                const icons = {
+                    text: '💬',
+                    image: '🖼️',
+                    audio: '🎵',
+                    code: '💻',
+                    vision: '👁️'
+                };
+                return icons[this.currentMode];
+            }
+
+            async callONINexusAPI(context) {
+                // Simulate multimodal AI processing with different responses based on mode
+                return new Promise((resolve) => {
+                    const delay = 1500 + Math.random() * 2000;
+                    
+                    setTimeout(() => {
+                        const responses = {
+                            text: [
+                                "🧠 Neural analysis complete. Processing your request through advanced language models...",
+                                "⚡ Quantum circuits engaged. Analyzing semantic patterns and context...",
+                                "🔮 Predictive algorithms activated. Generating optimal response matrix...",
+                                "🌌 Connecting to the knowledge nexus. Synthesizing information streams..."
+                            ],
+                            image: [
+                                "👁️ Computer vision systems online. Analyzing visual data through convolutional networks...",
+                                "📊 Image recognition protocols activated. Detecting patterns, objects, and context...",
+                                "🎨 Visual processing complete. Extracting features and semantic meaning...",
+                                "🔍 Advanced image analysis finished. Ready to discuss visual elements..."
+                            ],
+                            audio: [
+                                "🎵 Audio processing cores initialized. Analyzing waveforms and spectral data...",
+                                "🔊 Sound pattern recognition active. Extracting acoustic features...",
+                                "🎼 Harmonic analysis complete. Processing temporal audio sequences...",
+                                "📻 Audio neural networks engaged. Ready for acoustic interpretation..."
+                            ],
+                            code: [
+                                "💻 Code analysis subroutines activated. Parsing syntax and semantic structures...",
+                                "🔧 Programming logic processors online. Analyzing algorithms and patterns...",
+                                "⚙️ Software engineering protocols engaged. Ready for code optimization...",
+                                "🖥️ Development environment synchronized. Code intelligence systems ready..."
+                            ],
+                            vision: [
+                                "👁️‍🗨️ Advanced computer vision engaged. Multi-layer analysis in progress...",
+                                "🤖 Object detection and scene understanding active...",
+                                "🎯 Spatial reasoning and depth perception online...",
+                                "🌐 Visual cognition systems fully operational..."
+                            ]
+                        };
+                        
+                        const modeResponses = responses[context.mode] || responses.text;
+                        const response = modeResponses[Math.floor(Math.random() * modeResponses.length)];
+                        
+                        // Add context about uploaded files
+                        let fileContext = "";
+                        if (context.files.length > 0) {
+                            fileContext = `\n\n📁 Analyzing ${context.files.length} uploaded file(s): ${context.files.map(f => f.name).join(', ')}`;
+                        }
+                        
+                        resolve(response + fileContext + "\n\n(ONI Nexus Demo - Integrate with your actual Qwen model for real AI responses!)");
+                    }, delay);
+                });
+            }
+        }
+
+        // Initialize ONI Nexus when the neural pathways are ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new ONINexusInterface();
+            
+            // Add some extra visual flair
+            setTimeout(() => {
+                const title = document.querySelector('.nexus-title');
+                title.style.textShadow = '0 0 30px var(--neon-cyan), 0 0 60px var(--neon-purple)';
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
-
