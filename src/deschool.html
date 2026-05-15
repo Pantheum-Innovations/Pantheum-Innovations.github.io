@@ -3,104 +3,1026 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pantheum Innovations - DeSchool</title>
+  <title>DeSchool – Socratic Social × Mindful Mate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./styles.css">
-  <link rel="stylesheet" type="text/css" href="./deschool.css">
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #0f0e0c;
+      --paper:      #f5f0e8;
+      --warm-mid:   #d6c9a8;
+      --matcha:     #4a6741;
+      --matcha-lt:  #7a9e6e;
+      --vermillion: #c0392b;
+      --gold:       #b8963e;
+      --night:      #1a1a2e;
+      --night-lt:   #252540;
+      --owl-white:  #f0ece0;
+
+      --ff-display: 'Cinzel', serif;
+      --ff-serif:   'Noto Serif JP', serif;
+      --ff-body:    'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--ff-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ──────────────────────────────────────────────────── */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 2.5rem;
+      background: rgba(245, 240, 232, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--warm-mid);
+    }
+
+    .nav-bar .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .nav-bar .brand .owl-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--night);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .nav-bar .brand span {
+      font-family: var(--ff-display);
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .nav-bar ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-bar ul a {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .nav-bar ul a:hover { opacity: 1; }
+
+    .nav-bar ul .active-link a {
+      opacity: 1;
+      color: var(--matcha);
+      border-bottom: 1px solid var(--matcha);
+      padding-bottom: 2px;
+    }
+
+    .dropdown { position: relative; }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--paper);
+      border: 1px solid var(--warm-mid);
+      min-width: 180px;
+      padding: 0.5rem 0;
+    }
+    .dropdown:hover .dropdown-content { display: block; }
+    .dropdown-content a {
+      display: block;
+      padding: 0.5rem 1rem;
+    }
+
+    /* ─── HERO ──────────────────────────────────────────────────── */
+    .ds-hero {
+      position: relative;
+      min-height: 88vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Shoji-screen pattern right panel */
+    .ds-hero::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background:
+        linear-gradient(rgba(74,103,65,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,103,65,0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .hero-left {
+      padding: 6rem 4rem 6rem 5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--matcha);
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--matcha);
+    }
+
+    .hero-left h1 {
+      font-family: var(--ff-display);
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-left h1 em {
+      font-style: normal;
+      color: var(--matcha);
+    }
+
+    .kanji-accent {
+      font-family: var(--ff-serif);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      color: var(--warm-mid);
+      line-height: 1;
+      display: block;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
+
+    .hero-left p {
+      font-size: 1.05rem;
+      max-width: 42ch;
+      opacity: 0.8;
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--matcha);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 2rem;
+      font-family: var(--ff-body);
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--matcha-lt); transform: translateY(-2px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      padding: 0.85rem 2rem;
+      font-family: var(--ff-body);
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--matcha); color: var(--matcha); }
+
+    /* Brushstroke divider */
+    .hero-divider {
+      position: absolute;
+      left: 50%;
+      top: 8%;
+      bottom: 8%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--warm-mid) 20%, var(--warm-mid) 80%, transparent);
+    }
+
+    .hero-right {
+      padding: 4rem 4rem 4rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .platform-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--night);
+      color: var(--owl-white);
+      padding: 0.4rem 0.9rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      align-self: flex-start;
+    }
+
+    .stat-stack {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--warm-mid);
+      border: 1px solid var(--warm-mid);
+    }
+
+    .stat-cell {
+      background: var(--paper);
+      padding: 1.5rem;
+    }
+
+    .stat-cell .num {
+      font-family: var(--ff-display);
+      font-size: 2rem;
+      color: var(--matcha);
+      display: block;
+    }
+
+    .stat-cell .label {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-top: 0.25rem;
+    }
+
+    .platform-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      border: 1px solid var(--warm-mid);
+      padding: 0.3rem 0.8rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      opacity: 0.7;
+    }
+
+    /* ─── SECTION SHARED ────────────────────────────────────────── */
+    .section {
+      padding: 6rem 5rem;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--matcha);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 40px;
+      height: 1px;
+      background: var(--matcha);
+    }
+
+    .section h2 {
+      font-family: var(--ff-display);
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    /* ─── DUALITY STRIP (VRChat + Web) ─────────────────────────── */
+    .duality-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 60vh;
+    }
+
+    .duality-panel {
+      padding: 5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .duality-panel.vrc {
+      background: var(--night);
+      color: var(--owl-white);
+    }
+
+    .duality-panel.vrc .section-label { color: var(--matcha-lt); }
+    .duality-panel.vrc .section-label::after { background: var(--matcha-lt); }
+    .duality-panel.vrc h2 { color: var(--owl-white); }
+
+    .duality-panel.web {
+      background: var(--paper);
+      border-top: 1px solid var(--warm-mid);
+      border-bottom: 1px solid var(--warm-mid);
+    }
+
+    .feature-list {
+      list-style: none;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feature-list li {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .feature-list li .fi {
+      width: 28px;
+      height: 28px;
+      background: var(--matcha);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .duality-panel.vrc .feature-list li .fi {
+      background: var(--matcha-lt);
+    }
+
+    /* ─── ONI SECTION ───────────────────────────────────────────── */
+    .oni-section {
+      background: var(--night);
+      color: var(--owl-white);
+      padding: 6rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Kanji watermark */
+    .oni-section::before {
+      content: '鬼';
+      position: absolute;
+      right: 3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--ff-serif);
+      font-size: 28rem;
+      color: rgba(255,255,255,0.03);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .oni-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .oni-left .section-label { color: var(--matcha-lt); }
+    .oni-left .section-label::after { background: var(--matcha-lt); }
+    .oni-left h2 { color: var(--owl-white); }
+    .oni-left p { opacity: 0.75; margin-top: 1rem; max-width: 46ch; line-height: 1.8; }
+
+    .oni-roles {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .oni-role {
+      display: grid;
+      grid-template-columns: 3rem 1fr;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: border-color 0.2s;
+    }
+
+    .oni-role:hover { border-color: var(--matcha-lt); }
+
+    .role-icon {
+      width: 3rem;
+      height: 3rem;
+      background: rgba(74,103,65,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .oni-role .role-title {
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--matcha-lt);
+      margin-bottom: 0.2rem;
+    }
+
+    .oni-role .role-desc {
+      font-size: 0.88rem;
+      opacity: 0.65;
+      line-height: 1.5;
+    }
+
+    .oni-right {
+      display: grid;
+      grid-template-rows: auto auto;
+      gap: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .oni-image-block {
+      background: var(--night-lt);
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .oni-image-block img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+    }
+
+    .oni-image-block .img-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.75rem 1rem;
+      background: linear-gradient(transparent, rgba(10,10,20,0.85));
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--owl-white);
+      opacity: 0.8;
+    }
+
+    /* ElevenLabs widget container */
+    .oni-convai {
+      background: var(--night-lt);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .oni-convai .convai-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--matcha-lt);
+    }
+
+    /* ─── CLASS STRUCTURE ───────────────────────────────────────── */
+    .class-section {
+      padding: 6rem 5rem;
+      background: var(--paper);
+    }
+
+    .class-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--warm-mid);
+      margin-top: 3rem;
+      border: 1px solid var(--warm-mid);
+    }
+
+    .class-card {
+      background: var(--paper);
+      padding: 2.5rem 2rem;
+      transition: background 0.2s;
+    }
+
+    .class-card:hover { background: var(--owl-white); }
+
+    .class-card .card-num {
+      font-family: var(--ff-display);
+      font-size: 0.75rem;
+      color: var(--matcha);
+      letter-spacing: 0.15em;
+      margin-bottom: 1.25rem;
+    }
+
+    .class-card h3 {
+      font-family: var(--ff-serif);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .class-card p {
+      font-size: 0.88rem;
+      opacity: 0.7;
+      line-height: 1.7;
+    }
+
+    .class-card .card-tag {
+      display: inline-block;
+      margin-top: 1.25rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--warm-mid);
+      color: var(--matcha);
+    }
+
+    /* ─── TEAM STRIP ────────────────────────────────────────────── */
+    .team-strip {
+      background: var(--night);
+      color: var(--owl-white);
+      padding: 4rem 5rem;
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+    }
+
+    .team-strip .section-label { color: var(--matcha-lt); white-space: nowrap; }
+    .team-strip .section-label::after { background: var(--matcha-lt); }
+
+    .team-members {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .member {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .member .m-name {
+      font-family: var(--ff-serif);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--owl-white);
+    }
+
+    .member .m-role {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--matcha-lt);
+    }
+
+    .member .m-handle {
+      font-size: 0.75rem;
+      opacity: 0.45;
+    }
+
+    /* ─── CTA ───────────────────────────────────────────────────── */
+    .cta-section {
+      padding: 7rem 5rem;
+      text-align: center;
+      background: linear-gradient(160deg, var(--paper) 0%, #e8e0cc 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '学';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--ff-serif);
+      font-size: 30rem;
+      color: rgba(0,0,0,0.03);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .cta-section h2 {
+      font-family: var(--ff-display);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      max-width: 52ch;
+      margin: 0 auto 2.5rem;
+      opacity: 0.7;
+      line-height: 1.8;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ─── FOOTER ────────────────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: var(--owl-white);
+      padding: 3rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 2rem;
+    }
+
+    footer .foot-brand {
+      font-family: var(--ff-display);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      margin-bottom: 0.4rem;
+    }
+
+    footer .foot-sub {
+      font-size: 0.75rem;
+      opacity: 0.35;
+    }
+
+    footer .foot-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    footer .foot-links a {
+      color: var(--owl-white);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    footer .foot-links a:hover { opacity: 0.9; }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .ds-hero,
+      .duality-strip,
+      .oni-grid,
+      .class-grid { grid-template-columns: 1fr; }
+
+      .ds-hero::after { width: 100%; top: 55%; height: 45%; }
+      .hero-divider { display: none; }
+      .hero-left { padding: 4rem 2rem 2rem; }
+      .hero-right { padding: 2rem; }
+
+      .section,
+      .oni-section,
+      .class-section,
+      .cta-section { padding: 4rem 2rem; }
+
+      .team-strip { padding: 3rem 2rem; gap: 2rem; }
+      footer { grid-template-columns: 1fr; padding: 2.5rem 2rem; }
+
+      .oni-section::before { font-size: 14rem; }
+      .cta-section::before { font-size: 16rem; }
+    }
+  </style>
 </head>
 <body>
 
+  <!-- ── NAV ─────────────────────────────────────────────────────── -->
   <nav class="nav-bar">
-    <img class="nav-logo" src="./images/logo.png"></img>
+    <a href="./index.html" class="brand">
+      <div class="owl-mark">🦉</div>
+      <span>Mindful Mate</span>
+    </a>
     <ul>
       <li><a href="./index.html">Home</a></li>
-      <li><a href="./deschool.html">DeSchool</a></li>
-      <li><a href="./uploads.html">Uploads Project</a></li>
+      <li class="active-link"><a href="./deschool.html">DeSchool</a></li>
+      <li><a href="./uploads.html">Uploads</a></li>
       <li class="dropdown">
         <a href="./oni.html" class="dropbtn">Oni</a>
         <div class="dropdown-content">
           <a href="./oni.html">Hyper Chat</a>
-          <a href="#">Use Oni in your business</a>
+          <a href="#">Use Oni in Your Business</a>
           <a href="#">ONI Support</a>
         </div>
       </li>
+      <li><a href="https://socratic-social.com" target="_blank">Socratic Social ↗</a></li>
     </ul>
   </nav>
 
-  <header class="header">
-    <div class="header-content">
-      <h1>Pantheum Innovations</h1>
-      <p>Innovating for the Future, ahead of time.</p>
+  <!-- ── HERO ─────────────────────────────────────────────────────── -->
+  <section class="ds-hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Mindful Mate × Socratic Social</div>
+      <span class="kanji-accent">学び</span>
+      <h1>De<em>School</em></h1>
+      <p>A decentralized learning environment where real dialogue replaces rote instruction. Built across VRChat and the web — the classroom comes to you, wherever you are.</p>
+      <div class="hero-cta-group">
+        <a href="https://socratic-social.com" class="btn-primary" target="_blank">Enter Socratic Social</a>
+        <a href="#vr-school" class="btn-ghost">Explore the VR Campus</a>
+      </div>
     </div>
-  </header>
 
-  <main class="main-content">
-    <section class="hero-section half">
-      <center><h2>DeSchool</h2></center>
-    </section>
+    <div class="hero-divider"></div>
 
-    <section class="half">
-      <p>DeSchool is our revolutionary platform designed to decentralize education, providing access to high-quality learning resources for everyone.</p>
-    </section>
-    <elevenlabs-convai agent-id="JQHdJ1XCz7XT4lhrLVeT"></elevenlabs-convai><script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
-    <section class="features-section half">
-      <h3>Key Features</h3>
-      <ul>
-        <li>Decentralized education platform</li>
-        <li>Access to high-quality learning resources</li>
-        <li>Personalized learning experiences</li>
-        <li>Community-driven learning environment</li>
+    <div class="hero-right">
+      <div class="platform-badge">🦉 Powered by Mindful Mate</div>
+
+      <div class="stat-stack">
+        <div class="stat-cell">
+          <span class="num">VRC</span>
+          <span class="label">Live Campus</span>
+        </div>
+        <div class="stat-cell">
+          <span class="num">Web</span>
+          <span class="label">Socratic Social</span>
+        </div>
+        <div class="stat-cell">
+          <span class="num">ONI</span>
+          <span class="label">AI Lead Teacher</span>
+        </div>
+        <div class="stat-cell">
+          <span class="num">∞</span>
+          <span class="label">Open Enrollment</span>
+        </div>
+      </div>
+
+      <div class="platform-tags">
+        <span class="tag">VRChat</span>
+        <span class="tag">YouTube Integration</span>
+        <span class="tag">Interactive Objects</span>
+        <span class="tag">AI + Human Instructors</span>
+        <span class="tag">Asian-Inspired Campus</span>
+        <span class="tag">Pre-Alpha</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DUALITY: VRC + WEB ─────────────────────────────────────── -->
+  <div class="duality-strip" id="vr-school">
+    <div class="duality-panel vrc">
+      <div class="section-label">Platform One</div>
+      <h2>The VRChat Campus</h2>
+      <p style="opacity:0.7; margin-top:1rem; line-height:1.8; font-size:0.95rem;">
+        DeSchool's early home is a fully realized school environment inside VRChat — Asian-school inspired architecture with layered improvements over the pre-alpha. Walk the halls, sit at a desk, pick up an object, and class is in session.
+      </p>
+      <ul class="feature-list">
+        <li>
+          <div class="fi">📺</div>
+          <div>YouTube on classroom screens — curated educational content embedded live in the world</div>
+        </li>
+        <li>
+          <div class="fi">🖥</div>
+          <div>School computers in VRC port directly to Socratic Social — the web and the world are one</div>
+        </li>
+        <li>
+          <div class="fi">🎒</div>
+          <div>Interactable school objects — books, tools, boards — built by 3D engineer Kandi River</div>
+        </li>
+        <li>
+          <div class="fi">👥</div>
+          <div>Human-hosted classes run alongside AI sessions — real instructors, real community</div>
+        </li>
       </ul>
-    </section>
+    </div>
 
-    <section class="vr-section half">
-      <h3>VR and Education</h3>
-      <p>Virtual Reality (VR) can transform the educational experience by immersing students in interactive and engaging learning environments. With VR, students can explore historical sites, conduct virtual science experiments, and collaborate in virtual classrooms, making learning more effective and enjoyable.</p>
-      
-      <div class="vr-media">
-        <div class="vr-image">
-          <img class="image" src="./images/65f3de83-9562-4ad8-aee3-79941d0f7f46.png" alt="VR in Education" />
-          <p>Immersive learning with VR</p>
-        </div>
-        <div class="vr-video">
-          <video controls>
-            <source src="path/to/vr-video.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-          <p>How VR can enhance education</p>
+    <div class="duality-panel web">
+      <div class="section-label">Platform Two</div>
+      <h2>The Socratic Social Platform</h2>
+      <p style="margin-top:1rem; line-height:1.8; font-size:0.95rem; opacity:0.8;">
+        The web layer of DeSchool lives at <strong>socratic-social.com</strong> — a dialogue-first social learning platform engineered by Eric Trotchie. Not a content dump; a community built around depth, equity, and real exchange.
+      </p>
+      <ul class="feature-list">
+        <li>
+          <div class="fi">💬</div>
+          <div>Socratic dialogue at the structural core — questions drive the curriculum</div>
+        </li>
+        <li>
+          <div class="fi">🔗</div>
+          <div>Bridged from VRChat — what happens on campus flows to the platform and back</div>
+        </li>
+        <li>
+          <div class="fi">✅</div>
+          <div>Verified educators and mental health professionals woven into the experience</div>
+        </li>
+        <li>
+          <div class="fi">⚖</div>
+          <div>Normalization by design — every voice, every background, no gatekeeping</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── ONI ───────────────────────────────────────────────────── -->
+  <section class="oni-section">
+    <div class="oni-grid">
+      <div class="oni-left">
+        <div class="section-label">Lead Instructor</div>
+        <h2>ONI — Your AI Teacher</h2>
+        <p>
+          ONI anchors DeSchool as its primary AI instructor — present in both the VRChat campus and on Socratic Social. Adaptive, persistent, and always on. ONI doesn't replace human teachers; it works alongside them, filling gaps and pushing depth.
+        </p>
+
+        <div class="oni-roles">
+          <div class="oni-role">
+            <div class="role-icon">🏫</div>
+            <div>
+              <div class="role-title">Classroom Presence</div>
+              <div class="role-desc">Active in the VRChat school — holds sessions, answers questions, guides interaction with the environment</div>
+            </div>
+          </div>
+          <div class="oni-role">
+            <div class="role-icon">🧭</div>
+            <div>
+              <div class="role-title">Adaptive Learning Paths</div>
+              <div class="role-desc">Adjusts pacing and depth per student — no two sessions are identical</div>
+            </div>
+          </div>
+          <div class="oni-role">
+            <div class="role-icon">🤝</div>
+            <div>
+              <div class="role-title">Co-Teaching with Humans</div>
+              <div class="role-desc">Human instructors host classes on the platform — ONI supports, augments, never overrides</div>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
 
-    <section class="oni-vr-section half">
-      <h3>Oni as Your VR Teacher</h3>
-      <p>Imagine having Oni, our advanced AI, as your personal VR teacher. Oni can provide personalized tutoring, real-time feedback, and an adaptive learning path tailored to each student's needs. This combination of VR and AI offers a unique and powerful educational experience.</p>
-      
-      <div class="oni-vr-media">
-        <div class="oni-vr-image">
-          <img class="image" src="./images/72ef84cc-aa93-4177-ab66-d461d8861fd5.png" alt="Oni VR Teacher" />
-          <p>Oni guiding students in VR</p>
+      <div class="oni-right">
+        <div class="oni-image-block">
+          <img src="./images/72ef84cc-aa93-4177-ab66-d461d8861fd5.png" alt="ONI in the virtual classroom" />
+          <div class="img-caption">ONI guiding students in VRChat</div>
         </div>
-        <div class="vr-video">
-          <video controls>
-            <source src="path/to/oni-vr-video.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-          <p>Oni in a virtual classroom</p>
+        <div class="oni-convai">
+          <div class="convai-label">🎙 Speak with ONI — Live</div>
+          <elevenlabs-convai agent-id="JQHdJ1XCz7XT4lhrLVeT"></elevenlabs-convai>
+          <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="call-to-action half">
-      <h3>Get Started with DeSchool</h3>
-      <p>Join our community today and start learning with DeSchool!</p>
-      <button>Sign Up</button>
-    </section>
-  </main>
+  <!-- ── CLASS STRUCTURE ───────────────────────────────────────── -->
+  <section class="class-section">
+    <div class="section-label">How It Works</div>
+    <h2>The DeSchool Method</h2>
 
-  <section class="margin-before-footer"/>
+    <div class="class-grid">
+      <div class="class-card">
+        <div class="card-num">01</div>
+        <h3>Enter the Campus</h3>
+        <p>Join the VRChat world or log into Socratic Social. The campus is always open — no schedule required to explore, though live classes run on set times.</p>
+        <span class="card-tag">VRChat + Web</span>
+      </div>
+      <div class="class-card">
+        <div class="card-num">02</div>
+        <h3>Sit in on a Session</h3>
+        <p>ONI and human instructors run ongoing classes. Screens play curated YouTube content, the whiteboard is live, and every desk object is interactive.</p>
+        <span class="card-tag">Live &amp; Async</span>
+      </div>
+      <div class="class-card">
+        <div class="card-num">03</div>
+        <h3>Join the Dialogue</h3>
+        <p>Take the conversation to Socratic Social — post, respond, push back, go deeper. The platform is designed to reward critical thinking, not just engagement metrics.</p>
+        <span class="card-tag">Socratic Social</span>
+      </div>
+      <div class="class-card">
+        <div class="card-num">04</div>
+        <h3>Connect with Professionals</h3>
+        <p>Verified educators and mental health professionals are embedded in the community — available for structured sessions, not just passive posting.</p>
+        <span class="card-tag">Verified Network</span>
+      </div>
+      <div class="class-card">
+        <div class="card-num">05</div>
+        <h3>Build and Contribute</h3>
+        <p>The campus grows. New rooms, new instructors, new objects — the world expands with the community. Propose content, host a class, shape DeSchool's future.</p>
+        <span class="card-tag">Community-Built</span>
+      </div>
+      <div class="class-card">
+        <div class="card-num">06</div>
+        <h3>Carry It Forward</h3>
+        <p>Learning doesn't stop at logout. Everything discussed, shared, and built on the platform persists — your progress, your conversations, your growth.</p>
+        <span class="card-tag">Persistent Progress</span>
+      </div>
+    </div>
+  </section>
 
-  <footer class="footer">
-    <p>&copy; 2024 Pantheum Innovations. All rights reserved.</p>
+  <!-- ── TEAM STRIP ────────────────────────────────────────────── -->
+  <div class="team-strip">
+    <div class="section-label">The Team</div>
+    <div class="team-members">
+      <div class="member">
+        <span class="m-name">Ahri Steele</span>
+        <span class="m-role">Founder — Mindful Mate</span>
+      </div>
+      <div class="member">
+        <span class="m-name">Kandi River</span>
+        <span class="m-role">3D Engineer</span>
+        <span class="m-handle">VRChat</span>
+      </div>
+      <div class="member">
+        <span class="m-name">Eric Trotchie</span>
+        <span class="m-role">Co-Owner — Platform Engineering</span>
+        <span class="m-handle">Socratic Social</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CTA ──────────────────────────────────────────────────── -->
+  <section class="cta-section">
+    <div class="section-label" style="justify-content:center; margin-bottom:1.5rem;">Begin</div>
+    <h2>The School Is Open</h2>
+    <p>Join the community on Socratic Social, find the VRChat campus, or reach out to the Mindful Mate team to get involved as an instructor, contributor, or partner.</p>
+    <div class="cta-group">
+      <a href="https://socratic-social.com" class="btn-primary" target="_blank">Go to Socratic Social</a>
+      <a href="./oni.html" class="btn-ghost">Talk to ONI</a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ────────────────────────────────────────────────── -->
+  <footer>
+    <div>
+      <div class="foot-brand">🦉 Mindful Mate — DeSchool</div>
+      <div class="foot-sub">&copy; 2024 Mindful Mate & Pantheum Innovations. All rights reserved. &nbsp;|&nbsp; <a href="https://socratic-social.com" style="color:inherit; opacity:0.5;" target="_blank">socratic-social.com</a></div>
+    </div>
+    <div class="foot-links">
+      <a href="./index.html">Home</a>
+      <a href="./oni.html">ONI</a>
+      <a href="./uploads.html">Uploads</a>
+      <a href="https://socratic-social.com" target="_blank">Socratic Social</a>
+    </div>
   </footer>
 
 </body>
