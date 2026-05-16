@@ -1,59 +1,887 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pantheum Innovations</title>
-    <link rel="stylesheet" type="text/css" href="./styles.css">
-    <link rel="stylesheet" type="text/css" href="./uploads.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pantheum Innovations — Research</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inconsolata:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="./styles.css">
+  <style>
+    /* ─── ROOT ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --void:       #070709;
+      --deep:       #0d0d14;
+      --surface:    #12121c;
+      --border:     rgba(255,255,255,0.07);
+      --border-lt:  rgba(255,255,255,0.14);
+      --text:       #e8e6e0;
+      --muted:      rgba(232,230,224,0.45);
+      --faint:      rgba(232,230,224,0.18);
+
+      --cyan:       #00e5c8;
+      --cyan-dim:   rgba(0,229,200,0.12);
+      --amber:      #f0a832;
+      --amber-dim:  rgba(240,168,50,0.1);
+      --violet:     #9b7fe8;
+      --violet-dim: rgba(155,127,232,0.1);
+      --red:        #e84545;
+      --red-dim:    rgba(232,69,69,0.1);
+
+      --ff-display: 'Syne', sans-serif;
+      --ff-serif:   'Cormorant Garamond', serif;
+      --ff-mono:    'Inconsolata', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: var(--text);
+      font-family: var(--ff-mono);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Scanline overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.04) 2px,
+        rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── NAV ───────────────────────────────────────────────────── */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(7,7,9,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: var(--ff-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    .nav-bar ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-bar ul a {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 0.2s;
+      font-family: var(--ff-mono);
+    }
+
+    .nav-bar ul a:hover { color: var(--text); }
+    .nav-bar ul .active a { color: var(--cyan); }
+
+    .dropdown { position: relative; }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: calc(100% + 1rem);
+      left: 0;
+      background: var(--surface);
+      border: 1px solid var(--border-lt);
+      min-width: 200px;
+      padding: 0.5rem 0;
+    }
+    .dropdown:hover .dropdown-content { display: block; }
+    .dropdown-content a {
+      display: block;
+      padding: 0.6rem 1.2rem;
+    }
+
+    /* ─── HERO ──────────────────────────────────────────────────── */
+    .hero {
+      padding: 8rem 5rem 5rem;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* Grid bg */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* Glow */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: 30%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,229,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+
+    .hero-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .hero-label::before {
+      content: '//';
+      opacity: 0.5;
+    }
+
+    .hero h1 {
+      font-family: var(--ff-display);
+      font-size: clamp(3rem, 6vw, 6rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 .accent { color: var(--cyan); }
+
+    .hero-sub {
+      font-family: var(--ff-serif);
+      font-size: 1.3rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      max-width: 60ch;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-item .meta-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .meta-item .meta-val {
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    /* ─── RESEARCH DOMAINS ──────────────────────────────────────── */
+    .domains {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .domain-card {
+      padding: 4rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .domain-card:nth-child(even) { border-right: none; }
+    .domain-card:nth-last-child(-n+2) { border-bottom: none; }
+
+    .domain-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .domain-card.cyan::before  { background: var(--cyan);   }
+    .domain-card.amber::before { background: var(--amber);  }
+    .domain-card.violet::before{ background: var(--violet); }
+    .domain-card.red::before   { background: var(--red);    }
+
+    .domain-card:hover::before { opacity: 1; }
+    .domain-card.cyan:hover  { background: var(--cyan-dim);   }
+    .domain-card.amber:hover { background: var(--amber-dim);  }
+    .domain-card.violet:hover{ background: var(--violet-dim); }
+    .domain-card.red:hover   { background: var(--red-dim);    }
+
+    .domain-num {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      color: var(--faint);
+      margin-bottom: 2rem;
+      font-family: var(--ff-mono);
+    }
+
+    .domain-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+
+    .domain-card h2 {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .domain-card.cyan  h2 { color: var(--cyan);   }
+    .domain-card.amber h2 { color: var(--amber);  }
+    .domain-card.violet h2{ color: var(--violet); }
+    .domain-card.red   h2 { color: var(--red);    }
+
+    .domain-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .domain-threads {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .thread {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .thread-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 0.45rem;
+    }
+
+    .cyan .thread-dot  { background: var(--cyan);   }
+    .amber .thread-dot { background: var(--amber);  }
+    .violet .thread-dot{ background: var(--violet); }
+    .red .thread-dot   { background: var(--red);    }
+
+    /* ─── BCI DEEP-DIVE ─────────────────────────────────────────── */
+    .bci-section {
+      border-top: 1px solid var(--border);
+      padding: 6rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bci-section::after {
+      content: 'BCI';
+      position: absolute;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--ff-display);
+      font-size: 18rem;
+      font-weight: 800;
+      color: rgba(155,127,232,0.04);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .bci-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .bci-left .section-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--violet);
+      margin-bottom: 1rem;
+    }
+
+    .bci-left h2 {
+      font-family: var(--ff-display);
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+
+    .bci-left p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 1rem;
+    }
+
+    /* Initiative cards */
+    .bci-initiatives {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 0;
+    }
+
+    .initiative {
+      background: var(--deep);
+      padding: 1.75rem 2rem;
+      transition: background 0.2s;
+    }
+
+    .initiative:hover { background: var(--surface); }
+
+    .initiative-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .initiative-tag {
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--violet);
+      color: var(--violet);
+    }
+
+    .initiative-tag.open { border-color: var(--cyan); color: var(--cyan); }
+
+    .initiative h3 {
+      font-family: var(--ff-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .initiative p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .initiative .init-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--violet);
+      text-decoration: none;
+      margin-top: 0.75rem;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .initiative .init-link:hover { opacity: 1; }
+
+    /* Warning block */
+    .research-note {
+      margin-top: 2.5rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(232,69,69,0.25);
+      background: var(--red-dim);
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.7;
+      position: relative;
+    }
+
+    .research-note::before {
+      content: '⚠ RESEARCH STAGE';
+      display: block;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      margin-bottom: 0.5rem;
+    }
+
+    /* ─── ARCHITECTURE CALLOUT ──────────────────────────────────── */
+    .arch-callout {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4rem;
+      align-items: center;
+      background: var(--deep);
+    }
+
+    .arch-callout .arch-label {
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+      white-space: nowrap;
+    }
+
+    .arch-body h2 {
+      font-family: var(--ff-display);
+      font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--amber);
+    }
+
+    .arch-body p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.85;
+      max-width: 70ch;
+      margin-bottom: 2rem;
+    }
+
+    .arch-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .arch-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid rgba(240,168,50,0.3);
+      color: var(--amber);
+    }
+
+    /* ─── ONI ───────────────────────────────────────────────────── */
+    .oni-strip {
+      padding: 4rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .oni-strip .section-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .oni-strip h2 {
+      font-family: var(--ff-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .oni-strip p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .oni-convai {
+      background: var(--surface);
+      border: 1px solid var(--border-lt);
+      padding: 2rem;
+    }
+
+    .oni-convai .convai-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+
+    /* ─── FOOTER ────────────────────────────────────────────────── */
+    footer {
+      padding: 3rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .foot-copy {
+      font-size: 0.72rem;
+      color: var(--faint);
+      letter-spacing: 0.08em;
+    }
+
+    .foot-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .foot-links a {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .foot-links a:hover { color: var(--text); }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero        { padding: 5rem 2rem 3rem; }
+      .domains     { grid-template-columns: 1fr; }
+      .domain-card { border-right: none; }
+      .domain-card:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+      .domain-card:last-child { border-bottom: none; }
+      .bci-section { padding: 4rem 2rem; }
+      .bci-grid    { grid-template-columns: 1fr; gap: 3rem; }
+      .arch-callout{ padding: 3rem 2rem; grid-template-columns: 1fr; gap: 2rem; }
+      .arch-callout .arch-label { writing-mode: horizontal-tb; transform: none; }
+      .oni-strip   { grid-template-columns: 1fr; padding: 3rem 2rem; }
+      footer       { grid-template-columns: 1fr; padding: 2rem; }
+      .bci-section::after { font-size: 8rem; }
+    }
+
+    /* Page-load fade */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-inner { animation: fadeUp 0.7s ease both; }
+    .domain-card { animation: fadeUp 0.6s ease both; }
+    .domain-card:nth-child(2) { animation-delay: 0.1s; }
+    .domain-card:nth-child(3) { animation-delay: 0.2s; }
+    .domain-card:nth-child(4) { animation-delay: 0.3s; }
+  </style>
 </head>
 <body>
-    <nav class="nav-bar">
-        <ul>
-            <li><a href="./index.html">Home</a></li>
-            <li><a href="./deschool.html">DeSchool</a></li>
-            <li><a href="uploads.html">Uploads Project</a></li>
-            <li class="dropdown">
-                <a href="oni.html" class="dropbtn">Oni</a>
-                <div class="dropdown-content">
-                    <a href="oni.html">Hyper Chat</a>
-                    <a href="#">Use Oni in your business</a>
-                    <a href="#">ONI Support</a>
-                </div>
-            </li>
-        </ul>
-    </nav>
 
-    <header class="header">
-        <div class="header-content">
-            <h1>Pantheum Innovations</h1>
-            <p>Innovating for the Future, ahead of time.</p>
+  <!-- ── NAV ──────────────────────────────────────────────────────── -->
+  <nav class="nav-bar">
+    <a href="./index.html" class="nav-brand">Pantheum</a>
+    <ul>
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./deschool.html">DeSchool</a></li>
+      <li class="active"><a href="./uploads.html">Research</a></li>
+      <li class="dropdown">
+        <a href="./oni.html" class="dropbtn">Oni</a>
+        <div class="dropdown-content">
+          <a href="./oni.html">Hyper Chat</a>
+          <a href="#">Use Oni in Your Business</a>
+          <a href="#">ONI Support</a>
         </div>
-    </header>
-     <elevenlabs-convai agent-id="JQHdJ1XCz7XT4lhrLVeT"></elevenlabs-convai><script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>   
-    <main class="main-content">
+      </li>
+    </ul>
+  </nav>
 
-        <section class="half">
-            <div class="content">
-                <h2>Fractal Dimension Tracing AI</h2>
-                <p>
-                    Our cutting-edge Fractal Dimension Tracing AI is revolutionizing the way we understand and interact with human cognition and brain function. By analyzing MRI, EEG, and fMRI data, along with laser-scanned information of the brain's lobes, our AI can recreate detailed, full-scale models of human brains.
-                </p>
-                <p>
-                    This technology holds the promise of allowing individuals to achieve a form of digital immortality by creating virtual copies of their cognitive processes. These digital copies can continue to exist and interact in meaningful ways even after the physical body has ceased to function.
-                </p>
-                <p>
-                    Imagine a world where the greatest surgeons, astronauts, and scientists can continue to guide and mentor future generations long after their time. Our AI can capture their expertise and wisdom, ensuring that their knowledge is preserved and accessible for future endeavors.
-                </p>
+  <!-- ── HERO ─────────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-label">Pantheum Innovations — Active Research</div>
+      <h1>Frontier<br><span class="accent">Domains.</span></h1>
+      <p class="hero-sub">
+        Four interlocking research tracks — crypto efficiency, AI optimization, multimodal path architectures, and brain-computer interfaces — each pushing the boundary of what machines and minds can do together.
+      </p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-label">Status</div>
+          <div class="meta-val">Active R&amp;D</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">BCI Initiative</div>
+          <div class="meta-val">Open Source</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Organization</div>
+          <div class="meta-val">Pantheum Innovations</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── RESEARCH DOMAINS ─────────────────────────────────────────── -->
+  <main>
+    <div class="domains">
+
+      <!-- 01: Crypto Mining Efficiency -->
+      <div class="domain-card cyan">
+        <div class="domain-num">// 01</div>
+        <span class="domain-icon">⛏</span>
+        <h2>Crypto Mining Efficiency</h2>
+        <p>
+          Mining infrastructure wastes energy at scale. Pantheum studies where that waste originates — hardware thermals, pool latency, firmware cycles — and builds frameworks for extracting more output per watt without compromising network security or decentralization.
+        </p>
+        <div class="domain-threads">
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Hardware-level thermal and power draw profiling across GPU and ASIC architectures</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Pool selection and latency modeling for hashrate optimization</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Firmware and driver tuning methodologies for sustained efficiency gains</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Environmental cost modeling and renewable integration pathways</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02: AI Efficiency -->
+      <div class="domain-card amber">
+        <div class="domain-num">// 02</div>
+        <span class="domain-icon">⚡</span>
+        <h2>AI Efficiency Research</h2>
+        <p>
+          Larger models are not always better models. Pantheum investigates where compute is genuinely necessary and where it's architectural inertia — studying inference cost, training efficiency, quantization tradeoffs, and the relationship between model size and real-world utility.
+        </p>
+        <div class="domain-threads">
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Inference-time compute profiling: cost-per-token vs. output quality curves</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Quantization and compression methods without meaningful capability loss</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Edge deployment strategies — capable models running on constrained hardware</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Training data efficiency: learning more from less, faster</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03: Multimodal Concurrent Path Architectures -->
+      <div class="domain-card violet">
+        <div class="domain-num">// 03</div>
+        <span class="domain-icon">⫶</span>
+        <h2>Multimodal Concurrent Path Architectures</h2>
+        <p>
+          Most AI systems process one modality at a time, sequentially. Pantheum explores architectures that handle vision, language, audio, and sensor data across parallel processing paths — asking how concurrent streams can be fused without creating bottlenecks or degrading individual channel quality.
+        </p>
+        <div class="domain-threads">
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Parallel stream fusion: maintaining modality fidelity while enabling cross-modal reasoning</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Attention routing across concurrent input paths — where to focus, and when</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Latency management in real-time multimodal pipelines</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Intersection with BCI: treating neural signal as a first-class modality</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04: BCI -->
+      <div class="domain-card red">
+        <div class="domain-num">// 04</div>
+        <span class="domain-icon">🧠</span>
+        <h2>Brain-Computer Interface</h2>
+        <p>
+          Non-invasive AI control through open-source EEG hardware and novel neural interface research. The goal is accessible BCI — not lab-locked, not proprietary — built on platforms anyone can run, extend, and build on.
+        </p>
+        <div class="domain-threads">
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>PiEEG integration — Raspberry Pi-based EEG as an open research platform</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>MindLink Interface — non-invasive AI control via interpreted neural signal</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Signal classification: translating EEG patterns into structured AI commands</span>
+          </div>
+          <div class="thread">
+            <div class="thread-dot"></div>
+            <span>Exploratory research into brain data capture and digital cognitive modeling</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── BCI DEEP-DIVE ──────────────────────────────────────────── -->
+    <section class="bci-section">
+      <div class="bci-grid">
+        <div class="bci-left">
+          <div class="section-eyebrow">// Brain-Computer Interface — Expanded</div>
+          <h2>Open-Source Neural Control</h2>
+          <p>
+            BCI research has historically lived behind institutional walls and venture-backed proprietary stacks. Pantheum's approach is different: build on open hardware, publish findings, and design for accessibility from the start.
+          </p>
+          <p>
+            The current focus is non-invasive — EEG-based signal capture and interpretation rather than implants. The MindLink Interface layer translates that raw signal into structured input an AI system can act on. Early targets are coarse motor-intent classification and attentional state detection, with the architecture designed to grow in resolution as hardware improves.
+          </p>
+          <p>
+            The longer research horizon includes brain data modeling — whether a sufficiently detailed capture of neural patterns can constitute a persistent, interactive cognitive representation. This remains early-stage and exploratory.
+          </p>
+
+          <div class="research-note">
+            Brain data cloning and digital cognitive modeling are exploratory research threads only. No product claims are made. Ethical review, privacy frameworks, and consent architecture are active parts of this work, not afterthoughts.
+          </div>
+        </div>
+
+        <div class="bci-initiatives">
+          <div class="initiative">
+            <div class="initiative-header">
+              <span class="initiative-tag open">Open Source</span>
+              <h3>PiEEG</h3>
             </div>
-        </section>
-    </main>
+            <p>A Raspberry Pi-based EEG shield enabling low-cost, open electroencephalography. Pantheum uses PiEEG as a primary hardware platform for signal acquisition — accessible to researchers, students, and builders without institutional budgets.</p>
+            <a href="https://github.com/raspberrypi-eeg/pieeg" class="init-link" target="_blank">github.com/raspberrypi-eeg/pieeg ↗</a>
+          </div>
 
-    <section class="margin-before-footer"/>
+          <div class="initiative">
+            <div class="initiative-header">
+              <span class="initiative-tag">Interface Layer</span>
+              <h3>MindLink Interface</h3>
+            </div>
+            <p>Pantheum's own interface layer sitting between raw EEG signal and AI input. MindLink interprets classified neural patterns — focus states, motor imagery, intent signals — and translates them into structured commands an AI agent can receive and act on. Non-invasive by design.</p>
+          </div>
 
+          <div class="initiative">
+            <div class="initiative-header">
+              <span class="initiative-tag">Exploratory</span>
+              <h3>Brain Data &amp; Cognitive Modeling</h3>
+            </div>
+            <p>Long-horizon research into whether longitudinal neural data capture can build a meaningful, interactive model of an individual's cognitive patterns — not as a product, but as a scientific and philosophical question with real engineering components. Ethics-first framing throughout.</p>
+          </div>
 
-    <footer>
-        <p>&copy; 2024 Pantheum Innovations. All rights reserved.</p>
-    </footer>
+          <div class="initiative">
+            <div class="initiative-header">
+              <span class="initiative-tag open">Open Source</span>
+              <h3>Additional EEG Initiatives</h3>
+            </div>
+            <p>Pantheum monitors and contributes to the broader open-source EEG ecosystem — hardware designs, signal processing libraries, and classification datasets that collectively lower the barrier to serious BCI research outside institutional settings.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ARCHITECTURE CALLOUT ───────────────────────────────────── -->
+    <div class="arch-callout">
+      <div class="arch-label">Multimodal Architecture</div>
+      <div class="arch-body">
+        <h2>Concurrent Path Processing</h2>
+        <p>
+          The convergence point across Pantheum's domains is multimodal architecture — systems that don't just accept multiple input types but process them simultaneously, on parallel paths, with intelligent fusion. This is especially relevant where BCI signals must be handled alongside language, vision, or environmental sensor data in real time without one path starving another. The efficiency research directly informs how these systems are built — concurrent doesn't have to mean expensive.
+        </p>
+        <div class="arch-tags">
+          <span class="arch-tag">Parallel Streams</span>
+          <span class="arch-tag">Cross-Modal Attention</span>
+          <span class="arch-tag">Real-Time Fusion</span>
+          <span class="arch-tag">Neural Signal as Modality</span>
+          <span class="arch-tag">Low-Latency Inference</span>
+          <span class="arch-tag">Edge Deployment</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ONI ────────────────────────────────────────────────────── -->
+    <div class="oni-strip">
+      <div>
+        <div class="section-eyebrow">// ONI — AI Interface</div>
+        <h2>Ask ONI About the Research</h2>
+        <p>ONI is Pantheum's AI — available here to discuss any of the four research domains, explain concepts, or go deeper on BCI, efficiency architectures, or mining optimization. Not a chatbot. A thinking partner.</p>
+      </div>
+      <div class="oni-convai">
+        <div class="convai-label">// Live — ONI Interface</div>
+        <elevenlabs-convai agent-id="JQHdJ1XCz7XT4lhrLVeT"></elevenlabs-convai>
+        <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── FOOTER ────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="foot-copy">&copy; 2024 Pantheum Innovations. All rights reserved.</div>
+    <div class="foot-links">
+      <a href="./index.html">Home</a>
+      <a href="./deschool.html">DeSchool</a>
+      <a href="./oni.html">ONI</a>
+    </div>
+  </footer>
+
 </body>
 </html>
