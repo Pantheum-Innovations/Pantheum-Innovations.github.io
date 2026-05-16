@@ -1,55 +1,476 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Pantheum Innovations</title>
-        <link rel="stylesheet" type="text/css" href="./styles.css">
-    </head>
-    <body>
-        <nav class="nav-bar">
-            <img class="nav-logo" src="./images/logo.png"></img>
-            <ul>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pantheum Innovations</title>
 
-                <li><a href="./index.html">Home</a></li>
-                <li><a href="./deschool.html">DeSchool</a></li>
-                <li><a href="./uploads.html">Uploads Project</a></li>
-                <li class="dropdown">
-                    <a href="./oni.html" class="dropbtn">Oni</a>
-                    <div class="dropdown-content">
-                        <a href="./oni.html">Hyper Chat</a>
-                        <a href="./model_builder.html">Use Oni in your business(Model Builder)</a>
-                        <a href="#">ONI Support</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-        <header class="header">
-            <div class="header-content">
-                <img class="header-logo" src="./images/logo.png"></img>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inconsolata:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 
-            <h1>Pantheum Innovations</h1>
-            <p>Innovating for the Future, ahead of time.</p>
-            </div>
-        </header>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    :root {
+      --void:       #070709;
+      --deep:       #0d0d14;
+      --surface:    #12121c;
+      --border:     rgba(255,255,255,0.07);
+      --border-lt:  rgba(255,255,255,0.14);
 
+      --text:       #e8e6e0;
+      --muted:      rgba(232,230,224,0.55);
+      --faint:      rgba(232,230,224,0.18);
 
-        <section>
-            <div class="hero">
-                <h4>We are dedicated to advancing technology and education through innovative projects.</h4>
-            </div>
+      --cyan:       #00e5c8;
+      --cyan-dim:   rgba(0,229,200,0.08);
 
-            <div class="hero" style="margin-top: 20px;">
-                <h2>Oni - Your Intelligent Assistant</h2>
-                <p>Oni is a fully modular AGI system capable of performing a wide range of tasks. From data analysis to interactive dialogue, Oni is here to help. Oni is designed to be highly adaptable, allowing it to handle everything from casual conversations to complex problem-solving. Explore how Oni can assist you with its advanced capabilities.</p>
-            </div>
-        </section>
-        <elevenlabs-convai agent-id="JQHdJ1XCz7XT4lhrLVeT"></elevenlabs-convai><script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
-        <section class="margin-before-footer"/>
-        <footer>
-            <p>&copy; 2024 Pantheum Innovations. All rights reserved.</p>
-        </footer>
-            
-    </body>
+      --ff-display: 'Syne', sans-serif;
+      --ff-serif:   'Cormorant Garamond', serif;
+      --ff-mono:    'Inconsolata', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: var(--text);
+      font-family: var(--ff-mono);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.04) 2px,
+        rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── NAV ───────────────────────────── */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(7,7,9,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: var(--ff-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    .nav-bar ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-bar ul a {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 0.2s;
+      font-family: var(--ff-mono);
+    }
+
+    .nav-bar ul a:hover {
+      color: var(--text);
+    }
+
+    .nav-bar ul .active a {
+      color: var(--cyan);
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: calc(100% + 1rem);
+      left: 0;
+      background: var(--surface);
+      border: 1px solid var(--border-lt);
+      min-width: 220px;
+      padding: 0.5rem 0;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 0.6rem 1.2rem;
+    }
+
+    /* ─── HERO ─────────────────────────── */
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(0,229,200,0.08) 0%, transparent 70%);
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      text-align: center;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-family: var(--ff-display);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 800;
+      line-height: 0.95;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.04em;
+    }
+
+    h1 span {
+      color: var(--cyan);
+    }
+
+    .hero p {
+      font-family: var(--ff-serif);
+      font-size: 1.3rem;
+      color: var(--muted);
+      max-width: 42ch;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.9rem 1.6rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.72rem;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--cyan);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      border: 1px solid var(--border-lt);
+      color: var(--text);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* ─── SECTIONS ─────────────────────── */
+    .section {
+      padding: 5rem 5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+
+    .section h2 {
+      font-family: var(--ff-display);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      margin-bottom: 1rem;
+    }
+
+    .section p {
+      max-width: 70ch;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.9;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      margin-top: 3rem;
+      border: 1px solid var(--border);
+    }
+
+    .card {
+      background: var(--deep);
+      padding: 2.5rem;
+      transition: background 0.2s;
+    }
+
+    .card:hover {
+      background: var(--surface);
+    }
+
+    .card-num {
+      color: var(--faint);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-family: var(--ff-display);
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: var(--cyan);
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ─── FOOTER ───────────────────────── */
+    footer {
+      padding: 3rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .foot-copy {
+      font-size: 0.72rem;
+      color: var(--faint);
+      letter-spacing: 0.08em;
+    }
+
+    .foot-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .foot-links a {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .foot-links a:hover {
+      color: var(--text);
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .section,
+      footer {
+        padding: 3rem 2rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      footer {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-bar {
+        padding: 1rem 1.2rem;
+      }
+
+      .nav-bar ul {
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav-bar">
+    <a href="./index.html" class="nav-brand">Pantheum</a>
+
+    <ul>
+      <li class="active"><a href="./index.html">Home</a></li>
+      <li><a href="./deschool.html">DeSchool</a></li>
+      <li><a href="./uploads.html">Research</a></li>
+
+      <li class="dropdown">
+        <a href="./oni.html" class="dropbtn">Oni</a>
+
+        <div class="dropdown-content">
+          <a href="./oni.html">Hyper Chat</a>
+          <a href="./model_builder.html">Use Oni in Your Business</a>
+          <a href="#">ONI Support</a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-label">Pantheum Innovations</div>
+
+      <h1>
+        Building<br>
+        <span>Frontier Systems.</span>
+      </h1>
+
+      <p>
+        Pantheum Innovations develops advanced AI systems, multimodal architectures, educational platforms, and experimental research infrastructure designed for the next generation of human-machine interaction.
+      </p>
+
+      <div class="hero-actions">
+        <a href="./uploads.html" class="btn btn-primary">Explore Research</a>
+        <a href="./oni.html" class="btn btn-ghost">Talk to ONI</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section-label">// Core Systems</div>
+
+    <h2>Research, AI, and Human Infrastructure</h2>
+
+    <p>
+      Pantheum operates across multiple connected domains: AI efficiency research, concurrent multimodal systems, open-source BCI exploration, decentralized education, and adaptive conversational intelligence. Each initiative informs the others through shared architectural principles centered on efficiency, accessibility, and scalable cognition.
+    </p>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-num">// 01</div>
+        <h3>ONI</h3>
+        <p>
+          A modular AI system engineered for persistent dialogue, reasoning, research support, and multimodal interaction.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-num">// 02</div>
+        <h3>DeSchool</h3>
+        <p>
+          A decentralized learning environment spanning VRChat and the web, combining AI and human instruction.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-num">// 03</div>
+        <h3>Research Labs</h3>
+        <p>
+          Experimental work in AI optimization, concurrent path architectures, crypto efficiency, and neural interfaces.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-copy">
+      &copy; 2024 Pantheum Innovations. All rights reserved.
+    </div>
+
+    <div class="foot-links">
+      <a href="./index.html">Home</a>
+      <a href="./deschool.html">DeSchool</a>
+      <a href="./oni.html">ONI</a>
+      <a href="./uploads.html">Research</a>
+    </div>
+  </footer>
+
+</body>
 </html>
