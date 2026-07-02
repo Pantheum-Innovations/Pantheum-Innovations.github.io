@@ -3,881 +3,1236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ONI Nexus - Multimodal AI System</title>
+    <title>Oni Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/markdown/markdown.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
-        
-        :root {
-            --neon-cyan: #00ffff;
-            --neon-purple: #8b5cf6;
-            --neon-pink: #ff00ff;
-            --neon-green: #39ff14;
-            --dark-bg: #0a0a0f;
-            --panel-bg: rgba(15, 15, 25, 0.9);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-primary: #050505;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #111111;
+            --bg-hover: #1a1a1a;
+            --bg-card: #141414;
+            --accent: #ffffff;
+            --accent-dim: #888888;
+            --accent-glow: rgba(255, 255, 255, 0.08);
+            --text-primary: #e8e8e8;
+            --text-secondary: #666666;
+            --text-muted: #444444;
+            --border: #1c1c1c;
+            --border-hover: #2a2a2a;
+            --font-display: 'Archivo Black', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --nav-width: 56px;
+            --panel-width: 264px;
         }
 
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--dark-bg);
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             height: 100vh;
             overflow: hidden;
-            position: relative;
-        }
-
-        /* Animated Background */
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
-                linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
-            z-index: -2;
-        }
-
-        .grid-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 20s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-        }
-
-        /* Floating Particles */
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--neon-cyan);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
-            50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
-        }
-
-        .main-container {
-            display: flex;
-            height: 100vh;
-            gap: 20px;
-            padding: 20px;
-        }
-
-        /* Left Panel - Chat */
-        .chat-panel {
-            flex: 1;
-            background: var(--panel-bg);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            box-shadow: 
-                0 0 30px rgba(0, 255, 255, 0.2),
-                inset 0 0 20px rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
-            position: relative;
-            overflow: hidden;
         }
+        svg { display: block; }
 
-        .chat-panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-            animation: scanline 3s linear infinite;
-        }
-
-        @keyframes scanline {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        /* Header */
-        .nexus-header {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(0, 255, 255, 0.3));
-            padding: 25px;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-            position: relative;
-        }
-
-        .nexus-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 28px;
-            font-weight: 900;
-            color: white;
-            text-shadow: 0 0 20px var(--neon-cyan);
-            margin-bottom: 5px;
-            letter-spacing: 2px;
-        }
-
-        .nexus-subtitle {
-            font-size: 14px;
-            color: var(--neon-cyan);
-            opacity: 0.8;
-            font-weight: 300;
-        }
-
-        .status-indicators {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--neon-green);
-            box-shadow: 0 0 10px var(--neon-green);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        /* Messages Area */
-        .neural-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .quantum-message {
-            max-width: 80%;
-            padding: 15px 20px;
-            border-radius: 15px;
-            font-size: 14px;
-            line-height: 1.5;
-            position: relative;
-            animation: materialize 0.5s ease-out;
-        }
-
-        @keyframes materialize {
-            0% { opacity: 0; transform: translateY(20px) scale(0.9); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .user-transmission {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(255, 0, 255, 0.6));
-            color: white;
-            align-self: flex-end;
-            border: 1px solid rgba(255, 0, 255, 0.5);
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
-        }
-
-        .ai-response {
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(57, 255, 20, 0.1));
-            color: var(--neon-cyan);
-            align-self: flex-start;
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-        }
-
-        .processing-core {
-            display: none;
-            align-self: flex-start;
-            background: rgba(0, 255, 255, 0.1);
-            padding: 15px 20px;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 255, 255, 0.3);
-        }
-
-        .neural-dots {
-            display: flex;
-            gap: 5px;
-        }
-
-        .neural-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--neon-cyan);
-            border-radius: 50%;
-            animation: neuralPulse 1.5s infinite ease-in-out;
-        }
-
-        .neural-dot:nth-child(2) { animation-delay: 0.3s; }
-        .neural-dot:nth-child(3) { animation-delay: 0.6s; }
-
-        @keyframes neuralPulse {
-            0%, 60%, 100% { transform: scale(1); opacity: 0.3; }
-            30% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 10px var(--neon-cyan); }
-        }
-
-        /* Input Area */
-        .quantum-input-zone {
-            padding: 25px;
-            background: rgba(15, 15, 25, 0.9);
-            border-top: 1px solid rgba(0, 255, 255, 0.3);
-        }
-
-        .multimodal-controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .mode-button {
-            padding: 8px 15px;
-            background: rgba(0, 255, 255, 0.1);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 20px;
-            color: var(--neon-cyan);
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .mode-button:hover, .mode-button.active {
-            background: rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .input-matrix {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .neural-input {
-            flex: 1;
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(0, 255, 255, 0.3);
-            border-radius: 25px;
-            color: white;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s ease;
-            font-family: 'Rajdhani', sans-serif;
-        }
-
-        .neural-input:focus {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-            background: rgba(0, 255, 255, 0.05);
-        }
-
-        .neural-input::placeholder {
-            color: rgba(0, 255, 255, 0.5);
-        }
-
-        .quantum-button {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-            border: none;
-            border-radius: 50%;
-            color: white;
-            cursor: pointer;
+        /* ========== TOP TOOLBAR ========== */
+        .top-bar {
+            height: 48px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+            padding: 0 16px;
+            gap: 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            flex-shrink: 0;
         }
+        .top-bar::-webkit-scrollbar { display: none; }
 
-        .quantum-button:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 8px;
+            white-space: nowrap;
         }
-
-        .file-upload-zone {
-            margin-top: 15px;
-            padding: 20px;
-            border: 2px dashed rgba(0, 255, 255, 0.3);
-            border-radius: 15px;
-            text-align: center;
-            color: rgba(0, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: none;
-        }
-
-        .file-upload-zone.active {
-            display: block;
-        }
-
-        .file-upload-zone:hover {
-            border-color: var(--neon-cyan);
-            background: rgba(0, 255, 255, 0.05);
-        }
-
-        /* Right Panel - Capabilities */
-        .capabilities-panel {
-            width: 300px;
-            background: var(--panel-bg);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            box-shadow: 
-                0 0 30px rgba(139, 92, 246, 0.2),
-                inset 0 0 20px rgba(255, 255, 255, 0.05);
-            padding: 25px;
-        }
-
-        .capability-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-family: 'Orbitron', monospace;
-            color: var(--neon-purple);
-            font-size: 16px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
+        .logo-mark { width: 20px; height: 20px; color: #ffffff; flex-shrink: 0; }
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 15px;
             letter-spacing: 1px;
+            color: #ffffff;
+        }
+        .logo-sub {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-left: 2px;
         }
 
-        .capability-item {
+        .tool-group {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            transition: all 0.3s ease;
+            gap: 6px;
+            padding: 0 10px;
+            border-right: 1px solid var(--border);
+        }
+        .tool-group:last-child { border-right: none; }
+
+        .tool-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 700;
+            white-space: nowrap;
         }
 
-        .capability-item:hover {
-            background: rgba(139, 92, 246, 0.1);
-            transform: translateX(5px);
+        .tool-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            user-select: none;
         }
-
-        .capability-icon {
-            width: 20px;
-            height: 20px;
-            background: var(--neon-purple);
+        .tool-toggle svg { width: 13px; height: 13px; flex-shrink: 0; }
+        .tool-toggle:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+        .tool-toggle.active {
+            background: #1a1a1a;
+            border-color: #333333;
+            color: #ffffff;
+            box-shadow: 0 0 0 1px #333333;
+        }
+        .tool-toggle .indicator {
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
+            background: var(--text-muted);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .tool-toggle.active .indicator {
+            background: #ffffff;
+            box-shadow: 0 0 4px rgba(255,255,255,0.5);
+        }
+        .tool-toggle.caution.active {
+            border-color: #555555;
+        }
+        .tool-toggle.caution.active .indicator {
+            background: #cccccc;
+            box-shadow: 0 0 4px rgba(255,255,255,0.3);
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .main-container { flex: 1; display: flex; overflow: hidden; }
+
+        /* ========== LEFT NAV RAIL ========== */
+        .left-nav {
+            width: var(--nav-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            gap: 4px;
+            flex-shrink: 0;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+        .left-nav::-webkit-scrollbar { display: none; }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            transition: all 0.2s;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .nav-btn svg { width: 18px; height: 18px; }
+        .nav-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-secondary);
+        }
+        .nav-btn.active {
+            background: #1a1a1a;
+            color: #ffffff;
+            box-shadow: 0 0 0 1px #333333;
+        }
+        .nav-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 0 0 2px var(--bg-secondary);
+            display: none;
+        }
+        .nav-btn.has-badge .nav-badge { display: block; }
+        .nav-tooltip {
+            position: absolute;
+            left: calc(var(--nav-width) + 8px);
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 11px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            z-index: 100;
+        }
+        .nav-btn:hover .nav-tooltip { opacity: 1; }
+
+        .nav-divider {
+            width: 20px;
+            height: 1px;
+            background: var(--border);
+            margin: 6px 0;
+        }
+        .nav-section-label {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 700;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            padding: 8px 0;
+            transform: rotate(180deg);
         }
 
-        .system-stats {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(0, 255, 255, 0.2);
+        /* ========== CENTER CONTENT ========== */
+        .center-content { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+
+        /* ========== CHAT AREA ========== */
+        .chat-area { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .stat-bar {
+        .message {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            line-height: 1.6;
+            font-size: 14px;
+            animation: messageIn 0.3s ease;
+        }
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #2a2a2a;
+            border-bottom-right-radius: 4px;
+        }
+        .message.ai {
+            align-self: flex-start;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+            max-width: 85%;
+        }
+        .message.system { align-self: center; background: none; border: 1px dashed var(--border); }
+
+        .message-header {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .message.user .message-header { color: #888888; }
+        .message p { margin: 6px 0; }
+        .message p:first-child { margin-top: 0; }
+        .message p:last-child { margin-bottom: 0; }
+        .message code {
+            font-family: var(--font-mono);
+            background: rgba(255,255,255,0.06);
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 12.5px;
+        }
+
+        .thinking-block {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed #333333;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            overflow: hidden;
+        }
+        .thinking-toggle-btn {
+            width: 100%; display: flex; align-items: center; gap: 6px;
+            padding: 8px 12px; font-family: var(--font-mono); font-size: 10.5px;
+            letter-spacing: .04em; color: var(--text-secondary); background: none; border: none; cursor: pointer;
+        }
+        .thinking-toggle-btn svg { width: 10px; height: 10px; transition: transform .15s; }
+        .thinking-toggle-btn.open svg { transform: rotate(90deg); }
+        .thinking-content {
+            display: none; padding: 0 14px 12px; font-style: italic; white-space: pre-wrap; line-height: 1.55;
+        }
+        .thinking-block.open .thinking-content { display: block; }
+
+        .sources-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .source-chip {
+            font-family: var(--font-mono); font-size: 10px; color: var(--text-primary);
+            background: var(--bg-hover); border: 1px solid var(--border); border-radius: 5px;
+            padding: 4px 8px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        .typing-dots { display: flex; gap: 4px; padding: 2px 0; }
+        .typing-dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--text-secondary); animation: bounce 1.2s infinite; }
+        .typing-dots span:nth-child(2) { animation-delay: .15s; }
+        .typing-dots span:nth-child(3) { animation-delay: .3s; }
+        @keyframes bounce { 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
+
+        .code-block {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        .code-header {
+            background: var(--bg-secondary);
+            padding: 8px 12px;
+            font-size: 11px;
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 12px;
-            color: var(--neon-cyan);
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .code-lang {
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+        .copy-btn {
+            background: none; border: none; color: var(--text-muted); cursor: pointer;
+            font-size: 11px; padding: 2px 8px; border-radius: 4px; transition: all 0.2s; font-family: var(--font-mono);
+        }
+        .copy-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+        .code-block pre {
+            padding: 14px; overflow-x: auto; font-family: var(--font-mono);
+            font-size: 13px; line-height: 1.5; color: #cccccc;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(0, 255, 255, 0.2);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 15px;
+        /* ========== INPUT AREA ========== */
+        .input-area { padding: 16px 24px 24px; border-top: 1px solid var(--border); background: var(--bg-secondary); flex-shrink: 0; }
+        .input-wrapper {
+            background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px;
+            padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; transition: all 0.2s; position: relative;
         }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
-            animation: progressFlow 2s ease-in-out infinite;
+        .input-wrapper:focus-within { border-color: #333333; box-shadow: 0 0 0 2px rgba(255,255,255,0.05); }
+        .input-row { display: flex; align-items: flex-end; gap: 10px; }
+        textarea {
+            flex: 1; background: none; border: none; color: var(--text-primary); font-size: 14px;
+            resize: none; outline: none; max-height: 200px; font-family: inherit; line-height: 1.5;
         }
-
-        @keyframes progressFlow {
-            0%, 100% { width: 70%; }
-            50% { width: 95%; }
+        textarea::placeholder { color: var(--text-muted); }
+        .input-actions { display: flex; gap: 8px; align-items: center; }
+        .icon-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: none; background: var(--bg-hover);
+            color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
         }
-
-        .welcome-transmission {
-            text-align: center;
-            color: rgba(0, 255, 255, 0.7);
-            padding: 60px 20px;
-            font-size: 16px;
+        .icon-btn svg { width: 15px; height: 15px; }
+        .icon-btn:hover { background: #222222; color: #ffffff; }
+        .icon-btn.toggled { background: #222222; color: #fff; box-shadow: 0 0 0 1px #444; }
+        .send-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: none; background: #ffffff; color: #000000;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
         }
+        .send-btn svg { width: 14px; height: 14px; }
+        .send-btn:hover { background: #e0e0e0; transform: scale(1.05); }
 
-        .welcome-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            animation: rotate 4s linear infinite;
+        .file-preview { display: flex; gap: 8px; flex-wrap: wrap; }
+        .file-chip {
+            background: var(--bg-hover); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px;
+            font-size: 12px; display: flex; align-items: center; gap: 6px; color: var(--text-secondary);
         }
+        .file-chip svg { width: 11px; height: 11px; color: var(--text-muted); }
+        .file-chip .remove { cursor: pointer; color: #555555; font-weight: bold; transition: color 0.2s; }
+        .file-chip .remove:hover { color: #ffffff; }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .drop-overlay {
+            position: absolute; inset: 0; background: rgba(5,5,5,0.92);
+            border: 1px dashed #444; border-radius: 12px;
+            display: none; align-items: center; justify-content: center;
+            font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); z-index: 5;
         }
+        .input-wrapper.dragging .drop-overlay { display: flex; }
 
-        ::-webkit-scrollbar {
-            width: 6px;
+        /* ========== RIGHT PANEL ========== */
+        .right-panel {
+            width: var(--panel-width); background: var(--bg-secondary); border-left: 1px solid var(--border);
+            display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0;
         }
+        .panel-section { padding: 16px; border-bottom: 1px solid var(--border); }
+        .panel-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 800; margin-bottom: 12px; }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
+        .mode-card {
+            padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-tertiary);
+            margin-bottom: 8px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px;
         }
+        .mode-card:hover { background: var(--bg-hover); border-color: #333333; }
+        .mode-card.active { background: #161616; border-color: #444444; box-shadow: 0 0 0 1px #333333; }
+        .mode-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-hover); display: flex; align-items: center; justify-content: center; }
+        .mode-icon svg { width: 15px; height: 15px; color: var(--text-secondary); }
+        .mode-card.active .mode-icon { background: #222222; }
+        .mode-card.active .mode-icon svg { color: #fff; }
+        .mode-info h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; color: var(--text-primary); }
+        .mode-info p { font-size: 11px; color: var(--text-muted); margin: 0; }
 
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(var(--neon-cyan), var(--neon-purple));
-            border-radius: 10px;
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 13px; color: var(--text-secondary); }
+        .setting-row .setting-hint { font-size: 10px; color: var(--text-muted); display: block; margin-top: 1px; }
+
+        .toggle-switch {
+            width: 36px; height: 20px; background: var(--bg-hover); border-radius: 10px; position: relative;
+            cursor: pointer; transition: all 0.2s; border: 1px solid var(--border); flex-shrink: 0;
         }
+        .toggle-switch::after {
+            content: ''; position: absolute; width: 14px; height: 14px; background: #444444; border-radius: 50%;
+            top: 2px; left: 2px; transition: all 0.2s;
+        }
+        .toggle-switch.on { background: #222222; border-color: #444444; }
+        .toggle-switch.on::after { left: 18px; background: #ffffff; }
+        .toggle-switch.disabled { opacity: .35; cursor: not-allowed; }
 
-        /* Media Queries */
-        @media (max-width: 1024px) {
-            .main-container {
-                flex-direction: column;
-            }
-            
-            .capabilities-panel {
-                width: 100%;
-                height: 200px;
-                overflow-y: auto;
-            }
+        .agent-list { display: flex; flex-direction: column; gap: 6px; }
+        .agent-item { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 13px; transition: all 0.2s; color: var(--text-secondary); }
+        .agent-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .agent-item.active { background: #161616; color: #ffffff; }
+        .agent-item p { font-size: 10px; color: var(--text-muted); margin: 0; }
+        .agent-avatar {
+            width: 28px; height: 28px; border-radius: 50%; background: #1a1a1a; border: 1px solid #333333;
+            display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #888888; flex-shrink: 0;
+        }
+        .agent-item.active .agent-avatar { border-color: #555555; color: #ffffff; background: #222222; }
+
+        .status-block { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); line-height: 1.8; padding: 14px 16px; margin-top: auto; }
+        .status-block b { color: var(--text-secondary); }
+
+        /* ========== IDE PANEL ========== */
+        .ide-panel { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+        .ide-panel.active { display: flex; }
+        .messages.hidden-by-ide, .input-area.hidden-by-ide { display: none; }
+        .ide-body { flex: 1; display: grid; grid-template-columns: 180px 1fr; overflow: hidden; }
+        .file-tree { background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 14px 8px; overflow-y: auto; }
+        .file-tree-title { font-size: 10px; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; padding: 0 8px 10px; }
+        .file-item { display: flex; align-items: center; gap: 7px; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono); cursor: pointer; }
+        .file-item svg { width: 12px; height: 12px; color: var(--text-muted); flex-shrink: 0; }
+        .file-item:hover { background: var(--bg-hover); }
+        .file-item.active { background: #1a1a1a; color: #fff; }
+        .file-item.active svg { color: #fff; }
+        .editor-col { display: flex; flex-direction: column; overflow: hidden; }
+        .tabs-row { display: flex; align-items: center; background: var(--bg-secondary); border-bottom: 1px solid var(--border); overflow-x: auto; flex-shrink: 0; }
+        .tab { display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); border-right: 1px solid var(--border); white-space: nowrap; cursor: pointer; }
+        .tab.active { color: #fff; background: var(--bg-primary); }
+        .tab-close { width: 13px; height: 13px; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
+        .tab-close:hover { background: var(--bg-hover); }
+        .tab-close svg { width: 8px; height: 8px; }
+        .editor-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: var(--bg-primary); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        .run-btn { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: #000; background: #fff; border-radius: 6px; padding: 6px 13px; border: none; cursor: pointer; }
+        .run-btn svg { width: 10px; height: 10px; }
+        .run-btn:hover { background: #e0e0e0; }
+        .ask-ai-btn { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 6px 11px; cursor: pointer; }
+        .ask-ai-btn svg { width: 12px; height: 12px; }
+        .ask-ai-btn:hover { color: #fff; border-color: #333; }
+        .editor-area { flex: 1; overflow: hidden; }
+        .editor-area .CodeMirror { height: 100%; font-family: var(--font-mono); font-size: 13px; background: var(--bg-primary); color: var(--text-primary); }
+        .CodeMirror-gutters { background: var(--bg-primary) !important; border-right: 1px solid var(--border) !important; }
+        .CodeMirror-linenumber { color: var(--text-muted) !important; }
+        .CodeMirror-cursor { border-left: 1px solid #fff !important; }
+        .cm-s-default .cm-keyword { color: #e8e8e8 !important; font-weight: 600; }
+        .cm-s-default .cm-string, .cm-s-default .cm-string-2 { color: #aaaaaa !important; }
+        .cm-s-default .cm-comment { color: #555555 !important; font-style: italic; }
+        .cm-s-default .cm-number { color: #cccccc !important; }
+        .cm-s-default .cm-def, .cm-s-default .cm-variable-2 { color: #ffffff !important; }
+        .cm-s-default .cm-tag { color: #cccccc !important; }
+        .cm-s-default .cm-attribute { color: #999999 !important; }
+        .terminal-panel { background: #030303; border-top: 1px solid var(--border); height: 150px; display: flex; flex-direction: column; flex-shrink: 0; transition: height .2s; }
+        .terminal-panel.collapsed { height: 32px; }
+        .terminal-header { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); border-bottom: 1px solid var(--border); letter-spacing: .08em; text-transform: uppercase; flex-shrink: 0; }
+        .terminal-header button { background: none; border: none; color: var(--text-muted); cursor: pointer; }
+        .terminal-header svg { width: 10px; height: 10px; }
+        .terminal-body { flex: 1; overflow-y: auto; padding: 10px 12px; font-family: var(--font-mono); font-size: 12px; color: #c8c8c8; line-height: 1.7; white-space: pre-wrap; }
+        .terminal-panel.collapsed .terminal-body { display: none; }
+        .term-cmd { color: #888888; }
+        .term-mock { color: var(--text-muted); }
+        .term-err { color: #ffffff; font-weight: 600; }
+
+        .ide-assist-dock {
+            position: absolute; right: 14px; bottom: 14px; width: 300px;
+            background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px;
+            box-shadow: 0 16px 40px -10px rgba(0,0,0,0.7);
+            display: flex; flex-direction: column; overflow: hidden; z-index: 20; max-height: 380px;
+        }
+        .ide-assist-dock.hidden { display: none; }
+        .ide-assist-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+        .ide-assist-header span { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+        .ide-assist-header svg { width: 12px; height: 12px; }
+        .ide-assist-header button { background: none; border: none; color: var(--text-muted); cursor: pointer; }
+        .ide-assist-body { flex: 1; overflow-y: auto; padding: 10px 12px; font-size: 12.5px; line-height: 1.55; color: var(--text-secondary); max-height: 230px; display: flex; flex-direction: column; gap: 10px; }
+        .ide-assist-input-row { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border); }
+        .ide-assist-input-row input { flex: 1; background: var(--bg-hover); border: 1px solid var(--border); border-radius: 7px; padding: 7px 9px; font-size: 12px; color: var(--text-primary); }
+        .ide-assist-input-row button { width: 30px; height: 30px; border-radius: 7px; background: #fff; display: flex; align-items: center; justify-content: center; color: #000; flex-shrink: 0; border: none; cursor: pointer; }
+        .ide-assist-input-row button svg { width: 13px; height: 13px; }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2a2a2a; }
+
+        @media (max-width: 900px) {
+            .right-panel { display: none; }
+            .left-nav { width: 48px; }
+            .nav-btn { width: 36px; height: 36px; }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
-    <div class="background"></div>
-    <div class="grid-overlay"></div>
-    
-    <div class="main-container">
-        <div class="chat-panel">
-            <div class="nexus-header">
-                <div class="nexus-title">ONI NEXUS</div>
-                <div class="nexus-subtitle">Advanced Multimodal AI Interface • Neural Network Online</div>
-                <div class="status-indicators">
-                    <div class="status-dot"></div>
-                    <div class="status-dot" style="animation-delay: 0.5s;"></div>
-                    <div class="status-dot" style="animation-delay: 1s;"></div>
-                </div>
-            </div>
-            
-            <div class="neural-messages" id="neuralMessages">
-                <div class="welcome-transmission">
-                    <div class="welcome-icon">🧠</div>
-                    <div>Neural pathways initialized. Multimodal processing core online.<br>
-                    Ready for text, image, audio, and code analysis.</div>
-                </div>
-            </div>
-            
-            <div class="processing-core" id="processingCore">
-                <div class="neural-dots">
-                    <div class="neural-dot"></div>
-                    <div class="neural-dot"></div>
-                    <div class="neural-dot"></div>
-                </div>
-            </div>
-            
-            <div class="quantum-input-zone">
-                <div class="multimodal-controls">
-                    <div class="mode-button active" data-mode="text">💬 TEXT</div>
-                    <div class="mode-button" data-mode="image">🖼️ IMAGE</div>
-                    <div class="mode-button" data-mode="audio">🎵 AUDIO</div>
-                    <div class="mode-button" data-mode="code">💻 CODE</div>
-                    <div class="mode-button" data-mode="vision">👁️ VISION</div>
-                </div>
-                
-                <div class="input-matrix">
-                    <input 
-                        type="text" 
-                        class="neural-input" 
-                        id="neuralInput" 
-                        placeholder="Initialize neural transmission..."
-                        maxlength="1000"
-                    >
-                    <button class="quantum-button" id="quantumSend">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22,2 15,22 11,13 2,9"></polygon>
-                        </svg>
-                    </button>
-                </div>
-                
-                <div class="file-upload-zone" id="fileUploadZone">
-                    <div>📁 Drop files here or click to upload</div>
-                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">
-                        Supports: Images, Audio, Documents, Code Files
-                    </div>
-                    <input type="file" id="fileInput" style="display: none;" multiple 
-                           accept="image/*,audio/*,.txt,.py,.js,.html,.css,.json,.md">
-                </div>
-            </div>
+
+    <!-- Top Toolbar -->
+    <div class="top-bar" id="topBar">
+        <div class="logo">
+            <svg class="logo-mark" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9 L7 2 L9 9 Z"/><path d="M20 9 L17 2 L15 9 Z"/><rect x="4" y="9" width="16" height="13" rx="3"/><rect x="8" y="14" width="3" height="3" fill="#050505"/><rect x="13" y="14" width="3" height="3" fill="#050505"/></svg>
+            <span class="logo-text">ONI</span><span class="logo-sub">CHAT</span>
         </div>
-        
-        <div class="capabilities-panel">
-            <div class="capability-section">
-                <div class="section-title">🚀 Core Systems</div>
-                <div class="capability-item">
-                    <div class="capability-icon">🧠</div>
-                    <div>Neural Language Processing</div>
-                </div>
-                <div class="capability-item">
-                    <div class="capability-icon">👁️</div>
-                    <div>Computer Vision Analysis</div>
-                </div>
-                <div class="capability-item">
-                    <div class="capability-icon">🎵</div>
-                    <div>Audio Pattern Recognition</div>
-                </div>
-                <div class="capability-item">
-                    <div class="capability-icon">💻</div>
-                    <div>Code Generation & Debug</div>
-                </div>
-            </div>
-            
-            <div class="capability-section">
-                <div class="section-title">⚡ Advanced Features</div>
-                <div class="capability-item">
-                    <div class="capability-icon">🔗</div>
-                    <div>Chain-of-Thought Reasoning</div>
-                </div>
-                <div class="capability-item">
-                    <div class="capability-icon">🎯</div>
-                    <div>Context-Aware Responses</div>
-                </div>
-                <div class="capability-item">
-                    <div class="capability-icon">🔄</div>
-                    <div>Continuous Learning</div>
-                </div>
-                <div class="capability-item">
-                    <div class="capability-icon">⚛️</div>
-                    <div>Quantum Processing Core</div>
-                </div>
-            </div>
-            
-            <div class="system-stats">
-                <div class="section-title">📊 System Status</div>
-                <div class="stat-bar">
-                    <span>Neural Efficiency</span>
-                    <span>94%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 94%;"></div>
-                </div>
-                
-                <div class="stat-bar">
-                    <span>Memory Allocation</span>
-                    <span>78%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 78%;"></div>
-                </div>
-                
-                <div class="stat-bar">
-                    <span>Processing Power</span>
-                    <span>89%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 89%;"></div>
-                </div>
-            </div>
+
+        <div class="tool-group" data-group="io">
+            <span class="tool-label">I/O</span>
+        </div>
+        <div class="tool-group" data-group="env">
+            <span class="tool-label">Environment</span>
+        </div>
+        <div class="tool-group" data-group="agents">
+            <span class="tool-label">Agents</span>
+        </div>
+        <div class="tool-group" data-group="generate">
+            <span class="tool-label">Generate</span>
+        </div>
+        <div class="tool-group" data-group="trade">
+            <span class="tool-label">Trade</span>
         </div>
     </div>
 
-    <script>
-        class ONINexusInterface {
-            constructor() {
-                this.currentMode = 'text';
-                this.conversationHistory = [];
-                this.uploadedFiles = [];
-                
-                this.neuralMessages = document.getElementById('neuralMessages');
-                this.neuralInput = document.getElementById('neuralInput');
-                this.quantumSend = document.getElementById('quantumSend');
-                this.processingCore = document.getElementById('processingCore');
-                this.fileUploadZone = document.getElementById('fileUploadZone');
-                this.fileInput = document.getElementById('fileInput');
-                
-                this.initializeNeuralNetwork();
-                this.createFloatingParticles();
-            }
+    <div class="main-container">
+        <!-- LEFT NAV RAIL -->
+        <nav class="left-nav" id="leftNav">
+            <button class="nav-btn active" data-nav="chat" title="Chat">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span class="nav-badge"></span>
+                <span class="nav-tooltip">Chat</span>
+            </button>
+            <button class="nav-btn" data-nav="ide" title="Coding IDE">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+                <span class="nav-badge"></span>
+                <span class="nav-tooltip">Coding IDE</span>
+            </button>
+            <button class="nav-btn" data-nav="agent" title="Agent Mode">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span class="nav-badge"></span>
+                <span class="nav-tooltip">Agent Mode</span>
+            </button>
+            <button class="nav-btn" data-nav="research" title="Deep Research">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <span class="nav-badge"></span>
+                <span class="nav-tooltip">Deep Research</span>
+            </button>
 
-            initializeNeuralNetwork() {
-                // Mode switching
-                document.querySelectorAll('.mode-button').forEach(button => {
-                    button.addEventListener('click', () => this.switchMode(button.dataset.mode));
-                });
+            <div class="nav-divider"></div>
 
-                // Message transmission
-                this.quantumSend.addEventListener('click', () => this.transmitMessage());
-                this.neuralInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        this.transmitMessage();
-                    }
-                });
+            <button class="nav-btn" data-nav="history" title="History">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>
+                <span class="nav-tooltip">History</span>
+            </button>
+            <button class="nav-btn" data-nav="files" title="Files">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                <span class="nav-tooltip">Files</span>
+            </button>
 
-                // File upload system
-                this.fileUploadZone.addEventListener('click', () => this.fileInput.click());
-                this.fileInput.addEventListener('change', (e) => this.processFiles(e.target.files));
-                
-                // Drag and drop
-                this.fileUploadZone.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    this.fileUploadZone.style.borderColor = 'var(--neon-cyan)';
-                });
-                
-                this.fileUploadZone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    this.fileUploadZone.style.borderColor = 'rgba(0, 255, 255, 0.3)';
-                    this.processFiles(e.dataTransfer.files);
-                });
+            <div class="nav-divider"></div>
 
-                // Input validation
-                this.neuralInput.addEventListener('input', () => {
-                    this.quantumSend.style.opacity = this.neuralInput.value.trim() ? '1' : '0.5';
-                });
-            }
+            <div class="nav-section-label">Tools</div>
 
-            createFloatingParticles() {
-                const particleCount = 20;
-                for (let i = 0; i < particleCount; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.animationDelay = Math.random() * 6 + 's';
-                    particle.style.animationDuration = (3 + Math.random() * 6) + 's';
-                    document.body.appendChild(particle);
-                }
-            }
+            <button class="nav-btn" data-nav="settings" title="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.67 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.67 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span class="nav-tooltip">Settings</span>
+            </button>
+        </nav>
 
-            switchMode(mode) {
-                this.currentMode = mode;
-                
-                // Update active button
-                document.querySelectorAll('.mode-button').forEach(btn => btn.classList.remove('active'));
-                document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
-                
-                // Update placeholder and show/hide file upload
-                const placeholders = {
-                    text: 'Initialize neural transmission...',
-                    image: 'Describe what you want to analyze or upload an image...',
-                    audio: 'Upload audio file for analysis or describe audio task...',
-                    code: 'Enter code or describe programming task...',
-                    vision: 'Upload image for computer vision analysis...'
-                };
-                
-                this.neuralInput.placeholder = placeholders[mode];
-                
-                // Show file upload for non-text modes
-                if (mode !== 'text') {
-                    this.fileUploadZone.classList.add('active');
-                } else {
-                    this.fileUploadZone.classList.remove('active');
-                }
-            }
+        <!-- CENTER CONTENT -->
+        <div class="center-content" id="centerContent">
+            <!-- Chat Area -->
+            <div class="chat-area" id="chatArea">
+                <div class="messages" id="messages"></div>
 
-            processFiles(files) {
-                Array.from(files).forEach(file => {
-                    this.uploadedFiles.push(file);
-                    this.addMessage(`📎 Uploaded: ${file.name} (${this.formatFileSize(file.size)})`, 'system');
-                    
-                    // Show file preview for images
-                    if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            this.addMessage(`🖼️ Image Preview: <img src="${e.target.result}" style="max-width: 200px; border-radius: 10px; margin-top: 10px;">`, 'system');
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            }
+                <div class="input-area" id="inputArea">
+                    <div class="input-wrapper" id="inputWrapper">
+                        <div class="drop-overlay" id="dropOverlay">Drop a file to attach</div>
+                        <div class="file-preview" id="filePreview"></div>
+                        <div class="input-row">
+                            <textarea id="messageInput" rows="1" placeholder="Message ONI... (Shift+Enter for new line)"></textarea>
+                            <div class="input-actions">
+                                <input type="file" id="fileInput" multiple hidden>
+                                <button class="icon-btn" id="attachBtn" title="Upload files"></button>
+                                <button class="send-btn" id="sendBtn" title="Send"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
+            <!-- IDE workspace (shown only in Coding IDE mode) -->
+            <div class="ide-panel" id="idePanel">
+                <div class="ide-body">
+                    <div class="file-tree" id="fileTree"><div class="file-tree-title">Workspace</div></div>
+                    <div class="editor-col">
+                        <div class="tabs-row" id="tabsRow"></div>
+                        <div class="editor-toolbar">
+                            <button class="run-btn" id="runBtn"></button>
+                            <button class="ask-ai-btn" id="askAiBtn"></button>
+                        </div>
+                        <div class="editor-area" id="editorArea"></div>
+                        <div class="terminal-panel" id="terminalPanel">
+                            <div class="terminal-header"><span>Terminal</span><button id="terminalCollapseBtn"></button></div>
+                            <div class="terminal-body" id="terminalBody">$ ready</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ide-assist-dock hidden" id="ideAssistDock">
+                    <div class="ide-assist-header"><span id="ideAssistTitle"></span><button id="ideAssistCloseBtn"></button></div>
+                    <div class="ide-assist-body" id="ideAssistBody"></div>
+                    <div class="ide-assist-input-row">
+                        <input id="ideAssistInput" placeholder="e.g. explain this function...">
+                        <button id="ideAssistSendBtn"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            addMessage(content, type = 'user') {
-                const messageDiv = document.createElement('div');
-                
-                if (type === 'system') {
-                    messageDiv.className = 'quantum-message ai-response';
-                    messageDiv.style.fontSize = '12px';
-                    messageDiv.style.opacity = '0.8';
-                } else {
-                    messageDiv.className = `quantum-message ${type === 'user' ? 'user-transmission' : 'ai-response'}`;
-                }
-                
-                messageDiv.innerHTML = content;
-                
-                // Remove welcome message
-                const welcome = this.neuralMessages.querySelector('.welcome-transmission');
-                if (welcome) welcome.remove();
-                
-                this.neuralMessages.appendChild(messageDiv);
-                this.scrollToBottom();
-                
-                return messageDiv;
-            }
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+            <div class="panel-section">
+                <div class="panel-title">Mode Selection</div>
+                <div class="mode-card active" data-mode="chat">
+                    <div class="mode-icon" data-icon="chat"></div>
+                    <div class="mode-info"><h4>Chat</h4><p>General conversation</p></div>
+                </div>
+                <div class="mode-card" data-mode="ide">
+                    <div class="mode-icon" data-icon="code"></div>
+                    <div class="mode-info"><h4>Coding IDE</h4><p>Editor, terminal, AI review</p></div>
+                </div>
+                <div class="mode-card" data-mode="agent">
+                    <div class="mode-icon" data-icon="agent"></div>
+                    <div class="mode-info"><h4>Agent Mode</h4><p>Goal planning, persona-driven</p></div>
+                </div>
+                <div class="mode-card" data-mode="research">
+                    <div class="mode-icon" data-icon="research"></div>
+                    <div class="mode-info"><h4>Deep Research</h4><p>Sourced, web-grounded answers</p></div>
+                </div>
+            </div>
 
-            showProcessingCore() {
-                this.processingCore.style.display = 'block';
-                this.scrollToBottom();
-            }
+            <div class="panel-section">
+                <div class="panel-title">Thinking Settings</div>
+                <div class="setting-row">
+                    <span>Deep Reasoning<span class="setting-hint">Real extended-thinking pass</span></span>
+                    <div class="toggle-switch" id="deepReasonToggle"></div>
+                </div>
+                <div class="setting-row">
+                    <span>Show Thinking<span class="setting-hint">Reveal the reasoning trace</span></span>
+                    <div class="toggle-switch on" id="thinkingToggle"></div>
+                </div>
+                <div class="setting-row">
+                    <span>Chain of Thought<span class="setting-hint">Visible step-by-step answers</span></span>
+                    <div class="toggle-switch on" id="cotToggle"></div>
+                </div>
+            </div>
 
-            hideProcessingCore() {
-                this.processingCore.style.display = 'none';
-            }
+            <div class="panel-section">
+                <div class="panel-title">Active Persona</div>
+                <div class="agent-list" id="agentList">
+                    <div class="agent-item active" data-persona="core">
+                        <div class="agent-avatar">O</div>
+                        <div><span>ONI Core</span><p>General-purpose</p></div>
+                    </div>
+                    <div class="agent-item" data-persona="code">
+                        <div class="agent-avatar">C</div>
+                        <div><span>Code Expert</span><p>Engineering-focused</p></div>
+                    </div>
+                    <div class="agent-item" data-persona="research">
+                        <div class="agent-avatar">R</div>
+                        <div><span>Researcher</span><p>Evidence-grounded</p></div>
+                    </div>
+                    <div class="agent-item" data-persona="design">
+                        <div class="agent-avatar">D</div>
+                        <div><span>Designer</span><p>UX & visual rationale</p></div>
+                    </div>
+                </div>
+            </div>
 
-            scrollToBottom() {
-                setTimeout(() => {
-                    this.neuralMessages.scrollTop = this.neuralMessages.scrollHeight;
-                }, 100);
-            }
+            <div class="panel-section" style="border-bottom:none;">
+                <div class="panel-title">Model</div>
+                <div class="setting-row"><span style="font-size: 13px;">claude-sonnet-4-6</span></div>
+            </div>
 
-            async transmitMessage() {
-                const message = this.neuralInput.value.trim();
-                if (!message && this.uploadedFiles.length === 0) return;
+            <div class="status-block" id="statusBlock"></div>
+        </div>
+    </div>
 
-                // Create transmission context
-                const context = {
-                    mode: this.currentMode,
-                    message: message,
-                    files: this.uploadedFiles.map(f => ({name: f.name, type: f.type, size: f.size})),
-                    timestamp: Date.now()
-                };
+<script>
+/* ============================ ICONS ============================ */
+const ICONS = {
+  keyboard:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="15" height="10" rx="1.6"/><path d="M5.5 9h1M8.5 9h1M11.5 9h1M14.5 9h0M5.5 12h9"/></svg>',
+  mouse:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="8" height="15" rx="4"/><path d="M10 2.5v5"/></svg>',
+  gamepad:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5.8 5.5h8.4a3 3 0 0 1 2.9 3.7l-.7 3.3a2.4 2.4 0 0 1-4.3 1l-.7-.9a2 2 0 0 0-1.6-.8h-1.6a2 2 0 0 0-1.6.8l-.7.9a2.4 2.4 0 0 1-4.3-1l-.7-3.3a3 3 0 0 1 2.9-3.7Z"/><path d="M6.5 7v2M5.5 8h2"/><circle cx="13" cy="7.3" r=".4" fill="currentColor"/><circle cx="14.6" cy="8.9" r=".4" fill="currentColor"/></svg>',
+  audio:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h2l2-4 2 8 2-7 2 5 2-3h2"/></svg>',
+  globe:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.3"/><path d="M2.7 10h14.6M10 2.7c2 2.2 3 4.7 3 7.3s-1 5.1-3 7.3c-2-2.2-3-4.7-3-7.3s1-5.1 3-7.3Z"/></svg>',
+  vr:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="16" height="8" rx="3.5"/><circle cx="7" cy="10" r="1.6"/><circle cx="13" cy="10" r="1.6"/></svg>',
+  navigation:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.3"/><path d="M12.6 7.4 11 11l-3.6 1.6L9 9Z"/></svg>',
+  locate:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5c-3 0-5.5 2.4-5.5 5.5 0 3.8 5.5 9.5 5.5 9.5s5.5-5.7 5.5-9.5c0-3.1-2.5-5.5-5.5-5.5Z"/><circle cx="10" cy="8" r="2"/></svg>',
+  microagents:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="5.5" r="2"/><circle cx="14.5" cy="5.5" r="2"/><circle cx="5.5" cy="14.5" r="2"/><circle cx="14.5" cy="14.5" r="2"/><path d="M7.3 6.5 8.7 8.7M12.7 6.5l-1.4 2.2M7.3 13.5l1.4-2.2M12.7 13.5l-1.4-2.2"/></svg>',
+  image:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="15" height="12" rx="1.8"/><circle cx="7" cy="8.2" r="1.3"/><path d="M3.2 14.5l4.3-4.3a1.4 1.4 0 0 1 2 0l1.5 1.5a1.4 1.4 0 0 0 2 0l2.8-2.8"/></svg>',
+  video:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="11" height="10" rx="1.8"/><path d="M13.5 8.7 17.5 6v8l-4-2.7Z"/></svg>',
+  crypto:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.3"/><path d="M8 6.8h2.6a1.8 1.8 0 0 1 0 3.6H8m0 0h3a1.8 1.8 0 0 1 0 3.6H8m1.2-7.2V6M9.2 14V13"/></svg>',
+  paperclip:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 7.5 8.2 13.8a2.7 2.7 0 0 1-3.8-3.8l6.5-6.5a1.9 1.9 0 0 1 2.7 2.7L7 12.8"/></svg>',
+  arrowUp:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16V5M5 9l5-5 5 5"/></svg>',
+  x:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l10 10M15 5 5 15"/></svg>',
+  file:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5h5l3 3v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1Z"/><path d="M11 2.5V6h3"/></svg>',
+  play:'<svg viewBox="0 0 20 20" fill="currentColor"><path d="M6 4.2v11.6c0 .8.9 1.3 1.6.9l9-5.8a1 1 0 0 0 0-1.7l-9-5.8c-.7-.4-1.6.1-1.6.8Z"/></svg>',
+  spark:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5 11.6 7l4.4 1.6L11.6 10l-1.6 4.5L8 10 3.6 8.6 8 7Z"/></svg>',
+  chevron:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 5 12.5 10 7.5 15"/></svg>',
+  chevDown:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7.5 10 12.5 15 7.5"/></svg>',
+  modeChat:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5A2 2 0 0 1 5 3.5h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-3.5 3v-3H5a2 2 0 0 1-2-2Z"/></svg>',
+  modeCode:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5 3 10l4 5M13 5l4 5-4 5"/></svg>',
+  modeAgent:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="12" height="9" rx="2"/><path d="M10 7V4M7.5 4h5"/><circle cx="7.6" cy="11.3" r=".8" fill="currentColor" stroke="none"/><circle cx="12.4" cy="11.3" r=".8" fill="currentColor" stroke="none"/></svg>',
+  modeResearch:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5.5"/><path d="M17 17l-4-4"/></svg>',
+};
+function icon(name){ return ICONS[name] || ''; }
 
-                // Add user message
-                if (message) {
-                    this.addMessage(`${this.getModeIcon()} ${message}`, 'user');
-                }
+/* ============================ DATA ============================ */
+const TOOLS = [
+  {id:'keyboard', label:'Keyboard', group:'io'},
+  {id:'mouse', label:'Mouse', group:'io'},
+  {id:'gamepad', label:'Gamepad', group:'io'},
+  {id:'audio', label:'Audio', group:'io', def:true},
+  {id:'browser', label:'Browser', group:'env', def:true},
+  {id:'vr', label:'VR', group:'env'},
+  {id:'navigation', label:'Navigation', group:'env'},
+  {id:'locating', label:'Locating', group:'env'},
+  {id:'microagents', label:'Microagents', group:'agents'},
+  {id:'image', label:'Image', group:'generate'},
+  {id:'video', label:'Video', group:'generate'},
+  {id:'crypto', label:'Crypto', group:'trade', caution:true},
+];
+const MODES = {
+  chat:    {label:'Chat',        desc:'general chat mode'},
+  ide:     {label:'Coding IDE',  desc:'a coding IDE workspace'},
+  agent:   {label:'Agent Mode',  desc:'autonomous agent mode, planning and executing multi-step tasks'},
+  research:{label:'Deep Research', desc:'deep research mode — thorough, sourced, and explicit about uncertainty'},
+};
+const PERSONAS = {
+  core:     {label:'ONI Core', desc:'a precise, capable general-purpose assistant'},
+  code:     {label:'Code Expert', desc:'a senior software engineer who favors concise, correct, idiomatic code with brief rationale'},
+  research: {label:'Researcher', desc:'a careful analyst who grounds claims in evidence and flags uncertainty'},
+  design:   {label:'Designer', desc:'a design-minded collaborator focused on visual and UX rationale'},
+};
 
-                // Clear input
-                this.neuralInput.value = '';
-                this.quantumSend.style.opacity = '0.5';
-                this.uploadedFiles = [];
+const state = {
+  mode: 'chat',
+  tools: new Set(TOOLS.filter(t=>t.def).map(t=>t.id)),
+  persona: 'core',
+  deepReason: false,
+  showThinking: true,
+  cot: true,
+  files: [],
+  history: { chat:[], ide:[], agent:[], research:[] },
+  ide: {
+    activeFile: 'main.py',
+    openFiles: ['main.py'],
+    files: {
+      'main.py': {mode:'python', content:
+`# Oni workspace
+def fibonacci(n):
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
 
-                // Show processing
-                this.showProcessingCore();
+if __name__ == "__main__":
+    print(fibonacci(10))
+`},
+      'index.html': {mode:'htmlmixed', content:
+`<!DOCTYPE html>
+<html>
+  <head><title>Oni demo</title></head>
+  <body><h1>Hello from the IDE pane</h1></body>
+</html>
+`},
+      'styles.css': {mode:'css', content:
+`body {
+  background: #050505;
+  color: #e8e8e8;
+}
+`},
+      'script.js': {mode:'javascript', content:
+`// Try Run — this file actually executes
+function greet(name) {
+  return \`Hello, \${name}. Oni is online.\`;
+}
+console.log(greet("operator"));
+for (let i = 1; i <= 3; i++) {
+  console.log("step", i, "complete");
+}
+`},
+      'README.md': {mode:'markdown', content:
+`# Project notes
 
-                try {
-                    const response = await this.callONINexusAPI(context);
-                    this.hideProcessingCore();
-                    this.addMessage(response, 'ai');
-                    this.conversationHistory.push({user: message, ai: response, mode: this.currentMode});
-                } catch (error) {
-                    this.hideProcessingCore();
-                    this.addMessage('❌ Neural network error detected. Attempting recovery...', 'ai');
-                    console.error('Nexus Error:', error);
-                }
-            }
+Scratch workspace inside the Oni Chat demo.
+Edit a file, then press Run — script.js executes for real,
+other languages show a clearly labeled simulated run.
+`},
+    }
+  }
+};
 
-            getModeIcon() {
-                const icons = {
-                    text: '💬',
-                    image: '🖼️',
-                    audio: '🎵',
-                    code: '💻',
-                    vision: '👁️'
-                };
-                return icons[this.currentMode];
-            }
+/* ============================ BUILD STATIC ICON SLOTS ============================ */
+document.getElementById('attachBtn').innerHTML = icon('paperclip');
+document.getElementById('sendBtn').innerHTML = icon('arrowUp');
+document.getElementById('runBtn').innerHTML = icon('play') + ' Run';
+document.getElementById('askAiBtn').innerHTML = icon('spark') + ' Ask Oni';
+document.getElementById('terminalCollapseBtn').innerHTML = icon('chevDown');
+document.getElementById('ideAssistTitle').innerHTML = icon('spark') + ' Ask about this file';
+document.getElementById('ideAssistCloseBtn').innerHTML = icon('x');
+document.getElementById('ideAssistSendBtn').innerHTML = icon('arrowUp');
+document.querySelectorAll('.mode-icon').forEach(el=>{
+  const map = {chat:'modeChat', code:'modeCode', agent:'modeAgent', research:'modeResearch'};
+  el.innerHTML = icon(map[el.dataset.icon]);
+});
 
-            async callONINexusAPI(context) {
-                // Simulate multimodal AI processing with different responses based on mode
-                return new Promise((resolve) => {
-                    const delay = 1500 + Math.random() * 2000;
-                    
-                    setTimeout(() => {
-                        const responses = {
-                            text: [
-                                "🧠 Neural analysis complete. Processing your request through advanced language models...",
-                                "⚡ Quantum circuits engaged. Analyzing semantic patterns and context...",
-                                "🔮 Predictive algorithms activated. Generating optimal response matrix...",
-                                "🌌 Connecting to the knowledge nexus. Synthesizing information streams..."
-                            ],
-                            image: [
-                                "👁️ Computer vision systems online. Analyzing visual data through convolutional networks...",
-                                "📊 Image recognition protocols activated. Detecting patterns, objects, and context...",
-                                "🎨 Visual processing complete. Extracting features and semantic meaning...",
-                                "🔍 Advanced image analysis finished. Ready to discuss visual elements..."
-                            ],
-                            audio: [
-                                "🎵 Audio processing cores initialized. Analyzing waveforms and spectral data...",
-                                "🔊 Sound pattern recognition active. Extracting acoustic features...",
-                                "🎼 Harmonic analysis complete. Processing temporal audio sequences...",
-                                "📻 Audio neural networks engaged. Ready for acoustic interpretation..."
-                            ],
-                            code: [
-                                "💻 Code analysis subroutines activated. Parsing syntax and semantic structures...",
-                                "🔧 Programming logic processors online. Analyzing algorithms and patterns...",
-                                "⚙️ Software engineering protocols engaged. Ready for code optimization...",
-                                "🖥️ Development environment synchronized. Code intelligence systems ready..."
-                            ],
-                            vision: [
-                                "👁️‍🗨️ Advanced computer vision engaged. Multi-layer analysis in progress...",
-                                "🤖 Object detection and scene understanding active...",
-                                "🎯 Spatial reasoning and depth perception online...",
-                                "🌐 Visual cognition systems fully operational..."
-                            ]
-                        };
-                        
-                        const modeResponses = responses[context.mode] || responses.text;
-                        const response = modeResponses[Math.floor(Math.random() * modeResponses.length)];
-                        
-                        // Add context about uploaded files
-                        let fileContext = "";
-                        if (context.files.length > 0) {
-                            fileContext = `\n\n📁 Analyzing ${context.files.length} uploaded file(s): ${context.files.map(f => f.name).join(', ')}`;
-                        }
-                        
-                        resolve(response + fileContext + "\n\n(ONI Nexus Demo - Integrate with your actual Qwen model for real AI responses!)");
-                    }, delay);
-                });
-            }
-        }
+/* ============================ LEFT NAV ============================ */
+document.querySelectorAll('.nav-btn[data-nav]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const nav = btn.dataset.nav;
+    if (MODES[nav]) {
+      setMode(nav);
+    }
+    document.querySelectorAll('.nav-btn[data-nav]').forEach(b => b.classList.toggle('active', b === btn));
+  });
+});
 
-        // Initialize ONI Nexus when the neural pathways are ready
-        document.addEventListener('DOMContentLoaded', () => {
-            new ONINexusInterface();
-            
-            // Add some extra visual flair
-            setTimeout(() => {
-                const title = document.querySelector('.nexus-title');
-                title.style.textShadow = '0 0 30px var(--neon-cyan), 0 0 60px var(--neon-purple)';
-            }, 1000);
+/* ============================ TOOLBAR ============================ */
+function renderToolGroups(){
+  document.querySelectorAll('.tool-group').forEach(group=>{
+    const g = group.dataset.group;
+    const items = TOOLS.filter(t=>t.group===g);
+    group.innerHTML = `<span class="tool-label">${{io:'I/O',env:'Environment',agents:'Agents',generate:'Generate',trade:'Trade'}[g]}</span>` +
+      items.map(t=>{
+        const on = state.tools.has(t.id);
+        return `<div class="tool-toggle ${on?'active':''} ${t.caution?'caution':''}" data-tool="${t.id}" tabindex="0" role="switch" aria-checked="${on}">
+          <span class="indicator"></span>${icon(t.id==='image'?'image':t.id==='video'?'video':t.id)}${t.label}
+        </div>`;
+      }).join('');
+  });
+  document.querySelectorAll('.tool-toggle').forEach(toggle=>{
+    const fire = ()=>{
+      const id = toggle.dataset.tool;
+      toggle.classList.toggle('active');
+      if(toggle.classList.contains('active')) state.tools.add(id); else state.tools.delete(id);
+      toggle.setAttribute('aria-checked', toggle.classList.contains('active'));
+      updateStatus(); updateResearchHint();
+    };
+    toggle.addEventListener('click', fire);
+    toggle.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fire(); }});
+  });
+}
+renderToolGroups();
+
+/* ============================ MODE / PERSONA ============================ */
+document.querySelectorAll('.mode-card').forEach(card=>{
+  card.addEventListener('click', ()=> setMode(card.dataset.mode));
+});
+function setMode(mode){
+  state.mode = mode;
+  document.querySelectorAll('.mode-card').forEach(c=> c.classList.toggle('active', c.dataset.mode===mode));
+  // Sync left nav
+  document.querySelectorAll('.nav-btn[data-nav]').forEach(b => b.classList.toggle('active', b.dataset.nav === mode));
+  const isIde = mode === 'ide';
+  document.getElementById('idePanel').classList.toggle('active', isIde);
+  document.getElementById('messages').classList.toggle('hidden-by-ide', isIde);
+  document.getElementById('inputArea').classList.toggle('hidden-by-ide', isIde);
+  if(isIde) initIdeOnce();
+  renderMessages();
+  updateStatus();
+}
+document.querySelectorAll('.agent-item').forEach(item=>{
+  item.addEventListener('click', ()=>{
+    document.querySelectorAll('.agent-item').forEach(a=> a.classList.remove('active'));
+    item.classList.add('active');
+    state.persona = item.dataset.persona;
+    updateStatus();
+  });
+});
+
+/* ============================ THINKING SETTINGS ============================ */
+function bindToggle(id, getter, setter){
+  const el = document.getElementById(id);
+  el.addEventListener('click', ()=>{
+    if(el.classList.contains('disabled')) return;
+    setter(!getter());
+    el.classList.toggle('on', getter());
+    syncThinkingAvailability();
+    updateStatus();
+  });
+}
+bindToggle('deepReasonToggle', ()=>state.deepReason, v=>state.deepReason=v);
+bindToggle('thinkingToggle', ()=>state.showThinking, v=>state.showThinking=v);
+bindToggle('cotToggle', ()=>state.cot, v=>state.cot=v);
+function syncThinkingAvailability(){
+  const t = document.getElementById('thinkingToggle');
+  t.classList.toggle('disabled', !state.deepReason);
+  t.title = state.deepReason ? '' : 'Enable Deep Reasoning to produce a real thinking trace';
+}
+syncThinkingAvailability();
+
+/* ============================ STATUS ============================ */
+function updateStatus(){
+  document.getElementById('statusBlock').innerHTML =
+    `MODE &nbsp;<b>${MODES[state.mode].label}</b><br>PERSONA &nbsp;<b>${PERSONAS[state.persona].label}</b><br>TOOLS &nbsp;<b>${state.tools.size}/${TOOLS.length} active</b><br>REASONING &nbsp;<b>${state.deepReason?'Deep':'Standard'}</b>`;
+}
+function updateResearchHint(){}
+updateStatus();
+
+/* ============================ HELPERS ============================ */
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function renderAnswerHtml(text){
+  if(!text) return '';
+  const parts = []; const re = /```(\w+)?
+?([\s\S]*?)```/g;
+  let last = 0, m;
+  while((m = re.exec(text))){
+    if(m.index > last) parts.push({type:'text', content:text.slice(last, m.index)});
+    parts.push({type:'code', lang:(m[1]||'text').toUpperCase(), content:m[2]});
+    last = m.index + m[0].length;
+  }
+  if(last < text.length) parts.push({type:'text', content:text.slice(last)});
+  return parts.map(p=>{
+    if(p.type==='code'){
+      const esc = escapeHtml(p.content.replace(/
+$/,''));
+      return `<div class="code-block"><div class="code-header"><span class="code-lang">${p.lang}</span><button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-block').querySelector('pre').textContent)">Copy</button></div><pre>${esc}</pre></div>`;
+    }
+    const esc = escapeHtml(p.content).replace(/`([^`]+)`/g,'<code>$1</code>');
+    const trimmed = esc.trim();
+    if(!trimmed) return '';
+    return `<p>${trimmed.replace(/
+
++/g,'</p><p>').replace(/
+/g,'<br>')}</p>`;
+  }).join('');
+}
+
+/* ============================ CLAUDE API ============================ */
+function buildSystemPrompt(){
+  const persona = PERSONAS[state.persona];
+  const mode = MODES[state.mode];
+  const activeTools = TOOLS.filter(t=>state.tools.has(t.id)).map(t=>t.label).join(', ') || 'none';
+  let sys = `You are ONI, ${persona.desc}. You are operating in ${mode.desc}. `;
+  sys += `Interface toggles currently switched on in this demo console (cosmetic indicators only — they are NOT real backend integrations): ${activeTools}. If asked to use one of these, describe what you would do, but never claim to have actually performed a real physical, network, or financial action through them — especially never claim to have executed a real cryptocurrency trade. `;
+  if(state.cot) sys += `Reason through problems step by step, visibly, in your answer before concluding. `;
+  sys += `Keep the tone direct and a little technical, matching a console operator aesthetic. Use markdown code fences for any code.`;
+  return sys;
+}
+async function callClaude({messages, system, thinking, useWebSearch}){
+  const body = { model:'claude-sonnet-4-6', max_tokens: thinking ? 5200 : 1500, system, messages };
+  if(thinking) body.thinking = {type:'enabled', budget_tokens:4000};
+  if(useWebSearch) body.tools = [{type:'web_search_20250305', name:'web_search'}];
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    let detail=''; try{ detail = (await res.json()).error?.message || ''; }catch(e){}
+    throw new Error(detail || ('Request failed: '+res.status));
+  }
+  const data = await res.json();
+  let text='', thinkingText='', sources=[];
+  for(const block of (data.content||[])){
+    if(block.type==='text') text += block.text;
+    if(block.type==='thinking') thinkingText += block.thinking;
+    if(block.type==='web_search_tool_result' && Array.isArray(block.content)){
+      block.content.forEach(c=>{ if(c.title||c.url) sources.push({title:c.title||c.url, url:c.url}); });
+    }
+  }
+  return {text, thinkingText, sources};
+}
+
+/* ============================ MESSAGE RENDER ============================ */
+function buildMsgEl(m){
+  const wrap = document.createElement('div');
+  wrap.className = 'message ' + m.role;
+  const headerName = m.role==='user' ? 'YOU' : m.role==='system' ? 'SYSTEM' : `ONI · ${PERSONAS[m.persona||'core'].label.toUpperCase()}`;
+  let inner = `<div class="message-header">${headerName}</div>`;
+  if(m.attachments && m.attachments.length){
+    inner += `<div class="file-preview" style="margin-bottom:8px;">${m.attachments.map(a=>`<div class="file-chip">${icon('file')}${escapeHtml(a.name)}</div>`).join('')}</div>`;
+  }
+  if(m.pending){
+    inner += `<div class="typing-dots"><span></span><span></span><span></span></div>`;
+  } else {
+    if(m.thinkingText && state.showThinking){
+      inner += `<div class="thinking-block"><button class="thinking-toggle-btn">${icon('chevron')} Thought process</button><div class="thinking-content">${escapeHtml(m.thinkingText)}</div></div>`;
+    }
+    inner += renderAnswerHtml(m.text) || (m.text!==undefined ? `<p>${escapeHtml(m.text)}</p>` : '');
+    if(m.sources && m.sources.length){
+      inner += `<div class="sources-row">${m.sources.slice(0,5).map(s=>`<div class="source-chip" title="${escapeHtml(s.url||'')}">${escapeHtml(s.title)}</div>`).join('')}</div>`;
+    }
+  }
+  wrap.innerHTML = inner;
+  const tbtn = wrap.querySelector('.thinking-toggle-btn');
+  if(tbtn) tbtn.addEventListener('click', ()=>{ tbtn.classList.toggle('open'); tbtn.closest('.thinking-block').classList.toggle('open'); });
+  return wrap;
+}
+function renderMessages(){
+  const list = state.history[state.mode] || state.history.chat;
+  const container = document.getElementById('messages');
+  container.innerHTML='';
+  if(list.length===0){
+    container.innerHTML = `<div class="message ai"><div class="message-header">ONI</div><p>Systems online. Select your mode from the right panel and enable tools from the toolbar above. How can I assist?</p></div>`;
+    return;
+  }
+  list.forEach(m=> container.appendChild(buildMsgEl(m)));
+  container.scrollTop = container.scrollHeight;
+}
+renderMessages();
+
+/* ============================ COMPOSER ============================ */
+const input = document.getElementById('messageInput');
+const fileInput = document.getElementById('fileInput');
+const filePreview = document.getElementById('filePreview');
+const inputWrapper = document.getElementById('inputWrapper');
+
+input.addEventListener('input', ()=>{ input.style.height='auto'; input.style.height = Math.min(input.scrollHeight,200)+'px'; });
+input.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }});
+document.getElementById('sendBtn').addEventListener('click', sendMessage);
+document.getElementById('attachBtn').addEventListener('click', ()=> fileInput.click());
+
+fileInput.addEventListener('change', e=> handleFiles(e.target.files));
+['dragover','dragleave','drop'].forEach(evt=>{
+  inputWrapper.addEventListener(evt, e=>{
+    e.preventDefault();
+    inputWrapper.classList.toggle('dragging', evt==='dragover');
+    if(evt==='drop') handleFiles(e.dataTransfer.files);
+  });
+});
+function handleFiles(list){
+  Array.from(list).forEach(file=>{
+    const att = {name:file.name, type:file.type, content:null};
+    state.files.push(att);
+    const reader = new FileReader();
+    reader.onload = ()=>{ att.content = reader.result; };
+    if(file.type.startsWith('image/')) reader.readAsDataURL(file);
+    else if(file.size < 200000) reader.readAsText(file);
+    renderFileChips();
+  });
+  fileInput.value='';
+}
+function renderFileChips(){
+  filePreview.innerHTML = state.files.map((f,i)=>`<div class="file-chip">${icon('file')}${escapeHtml(f.name)} <span class="remove" data-i="${i}">×</span></div>`).join('');
+  filePreview.querySelectorAll('.remove').forEach(r=> r.addEventListener('click', ()=>{
+    state.files.splice(+r.dataset.i,1); renderFileChips();
+  }));
+}
+
+async function sendMessage(){
+  const text = input.value.trim();
+  if(!text && state.files.length===0) return;
+  const attachments = state.files.slice();
+  state.files = []; renderFileChips();
+  input.value=''; input.style.height='auto';
+
+  const list = state.history[state.mode];
+  list.push({role:'user', text, attachments});
+  renderMessages();
+  const pending = {role:'assistant', pending:true};
+  list.push(pending);
+  renderMessages();
+
+  try{
+    const apiMessages = list.filter(m=>!m.pending).map(m=>{
+      if(m.role==='user'){
+        const content = [];
+        (m.attachments||[]).forEach(a=>{
+          if(a.type && a.type.startsWith('image/') && a.content){
+            content.push({type:'image', source:{type:'base64', media_type:a.type, data:a.content.split(',')[1]}});
+          } else if(a.content){
+            content.push({type:'text', text:`[Attached file: ${a.name}]
+${String(a.content).slice(0,4000)}`});
+          } else if(a.name){
+            content.push({type:'text', text:`[Attached file: ${a.name}]`});
+          }
         });
-    </script>
+        content.push({type:'text', text: m.text || '(see attached file)'});
+        return {role:'user', content};
+      }
+      return {role:'assistant', content:m.text};
+    });
+    const {text:replyText, thinkingText, sources} = await callClaude({
+      messages: apiMessages,
+      system: buildSystemPrompt(),
+      thinking: state.deepReason,
+      useWebSearch: state.tools.has('browser'),
+    });
+    Object.assign(pending, {pending:false, text:replyText, thinkingText, sources, persona:state.persona});
+  }catch(err){
+    list.pop();
+    list.push({role:'system', text:'Connection interrupted — '+err.message});
+  }
+  renderMessages();
+}
+
+/* ============================ IDE ============================ */
+let cmEditor=null, ideInit=false;
+function initIdeOnce(){
+  if(ideInit) return; ideInit=true;
+  renderFileTree(); renderTabs();
+  cmEditor = CodeMirror(document.getElementById('editorArea'), {
+    value: state.ide.files[state.ide.activeFile].content,
+    mode: state.ide.files[state.ide.activeFile].mode,
+    lineNumbers:true, tabSize:2, viewportMargin:Infinity,
+  });
+  cmEditor.on('change', ()=>{ state.ide.files[state.ide.activeFile].content = cmEditor.getValue(); });
+}
+function renderFileTree(){
+  const tree = document.getElementById('fileTree');
+  tree.innerHTML = `<div class="file-tree-title">Workspace</div>` +
+    Object.keys(state.ide.files).map(name=>`<div class="file-item ${name===state.ide.activeFile?'active':''}" data-file="${name}">${icon('file')}${name}</div>`).join('');
+  tree.querySelectorAll('.file-item').forEach(el=> el.addEventListener('click', ()=> openFile(el.dataset.file)));
+}
+function renderTabs(){
+  const row = document.getElementById('tabsRow');
+  row.innerHTML = state.ide.openFiles.map(name=>`<div class="tab ${name===state.ide.activeFile?'active':''}" data-file="${name}">${name}<span class="tab-close" data-close="${name}">${icon('x')}</span></div>`).join('');
+  row.querySelectorAll('.tab').forEach(t=> t.addEventListener('click', e=>{ if(!e.target.closest('.tab-close')) openFile(t.dataset.file); }));
+  row.querySelectorAll('.tab-close').forEach(c=> c.addEventListener('click', e=>{ e.stopPropagation(); closeFile(c.dataset.close); }));
+}
+function openFile(name){
+  state.ide.activeFile = name;
+  if(!state.ide.openFiles.includes(name)) state.ide.openFiles.push(name);
+  renderFileTree(); renderTabs();
+  if(cmEditor){ cmEditor.setValue(state.ide.files[name].content); cmEditor.setOption('mode', state.ide.files[name].mode); }
+}
+function closeFile(name){
+  state.ide.openFiles = state.ide.openFiles.filter(f=>f!==name);
+  if(state.ide.openFiles.length===0) state.ide.openFiles=['main.py'];
+  if(state.ide.activeFile===name) openFile(state.ide.openFiles[0]); else renderTabs();
+}
+document.getElementById('terminalCollapseBtn').addEventListener('click', ()=> document.getElementById('terminalPanel').classList.toggle('collapsed'));
+function termLine(text, cls){
+  const body = document.getElementById('terminalBody');
+  const line = document.createElement('div'); if(cls) line.className=cls; line.textContent=text;
+  body.appendChild(line); body.scrollTop = body.scrollHeight;
+}
+document.getElementById('runBtn').addEventListener('click', ()=>{
+  document.getElementById('terminalPanel').classList.remove('collapsed');
+  const file = state.ide.activeFile;
+  termLine('$ run '+file, 'term-cmd');
+  if(file.endsWith('.js')){
+    const logs=[]; const orig = console.log;
+    console.log = (...args)=> logs.push(args.map(a=> typeof a==='object'?JSON.stringify(a):String(a)).join(' '));
+    try{ new Function(state.ide.files[file].content)(); logs.forEach(l=> termLine(l)); termLine('process exited (0)','term-mock'); }
+    catch(e){ termLine(String(e),'term-err'); }
+    finally{ console.log = orig; }
+  } else {
+    termLine('[simulated sandbox — no live interpreter for this filetype in this demo]','term-mock');
+    setTimeout(()=> termLine(file.endsWith('.py') ? '55' : 'done', 'term-mock'), 300);
+  }
+});
+document.getElementById('askAiBtn').addEventListener('click', ()=> document.getElementById('ideAssistDock').classList.remove('hidden'));
+document.getElementById('ideAssistCloseBtn').addEventListener('click', ()=> document.getElementById('ideAssistDock').classList.add('hidden'));
+document.getElementById('ideAssistInput').addEventListener('keydown', e=>{ if(e.key==='Enter') sendIdeAssist(); });
+document.getElementById('ideAssistSendBtn').addEventListener('click', sendIdeAssist);
+async function sendIdeAssist(){
+  const inp = document.getElementById('ideAssistInput');
+  const q = inp.value.trim(); if(!q) return; inp.value='';
+  const body = document.getElementById('ideAssistBody');
+  const userDiv = document.createElement('div'); userDiv.innerHTML = `<b style="color:#fff;">You:</b> ${escapeHtml(q)}`; body.appendChild(userDiv);
+  const pendingDiv = document.createElement('div'); pendingDiv.innerHTML = `<div class="typing-dots"><span></span><span></span><span></span></div>`; body.appendChild(pendingDiv);
+  body.scrollTop = body.scrollHeight;
+  try{
+    const file = state.ide.activeFile;
+    const {text} = await callClaude({
+      messages:[{role:'user', content:`File: ${file}
+
+${state.ide.files[file].content}
+
+Question: ${q}`}],
+      system: buildSystemPrompt() + ' Answer briefly about the code shown.',
+      thinking:false,
+    });
+    pendingDiv.innerHTML = `<b style="color:#fff;">Oni:</b> ${renderAnswerHtml(text)}`;
+  }catch(e){
+    pendingDiv.innerHTML = `<span style="color:#fff;">Connection interrupted — ${escapeHtml(e.message)}</span>`;
+  }
+  body.scrollTop = body.scrollHeight;
+}
+</script>
 </body>
 </html>
