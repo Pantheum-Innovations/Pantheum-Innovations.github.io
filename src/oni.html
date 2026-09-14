@@ -733,7 +733,7 @@
 
             <div class="panel-section" style="border-bottom:none;">
                 <div class="panel-title">Model</div>
-                <div class="setting-row"><span style="font-size: 13px;">claude-sonnet-4-6</span></div>
+                <div class="setting-row"><span style="font-size: 13px;">ONI 2</span></div>
             </div>
 
             <div class="status-block" id="statusBlock"></div>
@@ -992,7 +992,7 @@ $/,''));
   }).join('');
 }
 
-/* ============================ CLAUDE API ============================ */
+/* ============================ API ============================ */
 function buildSystemPrompt(){
   const persona = PERSONAS[state.persona];
   const mode = MODES[state.mode];
@@ -1003,28 +1003,28 @@ function buildSystemPrompt(){
   sys += `Keep the tone direct and a little technical, matching a console operator aesthetic. Use markdown code fences for any code.`;
   return sys;
 }
-async function callClaude({messages, system, thinking, useWebSearch}){
-  const body = { model:'claude-sonnet-4-6', max_tokens: thinking ? 5200 : 1500, system, messages };
-  if(thinking) body.thinking = {type:'enabled', budget_tokens:4000};
-  if(useWebSearch) body.tools = [{type:'web_search_20250305', name:'web_search'}];
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
-  });
-  if(!res.ok){
-    let detail=''; try{ detail = (await res.json()).error?.message || ''; }catch(e){}
-    throw new Error(detail || ('Request failed: '+res.status));
-  }
-  const data = await res.json();
-  let text='', thinkingText='', sources=[];
-  for(const block of (data.content||[])){
-    if(block.type==='text') text += block.text;
-    if(block.type==='thinking') thinkingText += block.thinking;
-    if(block.type==='web_search_tool_result' && Array.isArray(block.content)){
-      block.content.forEach(c=>{ if(c.title||c.url) sources.push({title:c.title||c.url, url:c.url}); });
-    }
-  }
-  return {text, thinkingText, sources};
-}
+#async function callClaude({messages, system, thinking, useWebSearch}){
+ # const body = { model:'claude-sonnet-4-6', max_tokens: thinking ? 5200 : 1500, system, messages };
+#  if(thinking) body.thinking = {type:'enabled', budget_tokens:4000};
+ # if(useWebSearch) body.tools = [{type:'web_search_20250305', name:'web_search'}];
+#  const res = await fetch('https://api.anthropic.com/v1/messages', {
+#    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+##  });
+#  if(!res.ok){
+#    let detail=''; try{ detail = (await res.json()).error?.message || ''; }catch(e){}
+#    throw new Error(detail || ('Request failed: '+res.status));
+#  }
+#  const data = await res.json();
+#  let text='', thinkingText='', sources=[];
+#  for(const block of (data.content||[])){
+#    if(block.type==='text') text += block.text;
+#    if(block.type==='thinking') thinkingText += block.thinking;
+ #   if(block.type==='web_search_tool_result' && Array.isArray(block.content)){
+#      block.content.forEach(c=>{ if(c.title||c.url) sources.push({title:c.title||c.url, url:c.url}); });
+  #  }
+ # }
+ # return {text, thinkingText, sources};
+#}
 
 /* ============================ MESSAGE RENDER ============================ */
 function buildMsgEl(m){
